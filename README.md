@@ -38,3 +38,7 @@
     Responsive Admin Panel <strong>(In Planung)</strong>
   </li>
 </ul>
+
+# Bilder Admin Panel
+<img src="https://github.com/TH3ONU5/VOOID/blob/main/agency/images/admin.png" width="100%" max-width="100%" align="center">
+
