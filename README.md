@@ -26,12 +26,12 @@
 # Geplante Funktionen
 <ul>
   <li>
-  Admin Login Brute force schutz (In bearbeitung)
+  Admin Login Brute force schutz <strong>(In bearbeitung)</strong>
   </li>
   <li>
-    User suche im Admin Panel (In bearbeitung)
+    User suche im Admin Panel <strong>(In bearbeitung)</strong>
   </li>
   <li>
-    KI-ASSISTENT (In Planung)
+    KI-ASSISTENT <strong>(In Planung)</strong>
   </li>
 </ul>
