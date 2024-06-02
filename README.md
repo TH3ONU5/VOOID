@@ -1,4 +1,4 @@
-<img src="https://github.com/TH3ONU5/VOOID/blob/main/agency/images/main.png" width="800px">
+<img src="https://github.com/TH3ONU5/VOOID/blob/main/agency/images/main.png" width="1000px">
 
 <h1 align="center">
   Eine kleine Plattform für den Verkauf von Websites könnte sowohl von kleinen Agenturen als auch von Privatpersonen betrieben werden. Diese Anwendung bietet eine intuitive Benutzeroberfläche, verfügt über ein Content-Management-System (CMS) und bietet weitere Funktionen
