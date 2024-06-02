@@ -34,4 +34,7 @@
   <li>
     KI-ASSISTENT <strong>(In Planung)</strong>
   </li>
+  <li>
+    Responsive Admin Panel <strong>(In Planung)</strong>
+  </li>
 </ul>
