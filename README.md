@@ -5,3 +5,5 @@
 # <p align="center">
   Eine kleine Plattform für den Verkauf von Websites könnte sowohl von kleinen Agenturen als auch von Privatpersonen betrieben werden. Diese Anwendung bietet eine intuitive Benutzeroberfläche, verfügt über ein Content-Management-System (CMS) und bietet weitere Funktionen.
 </h1>
+
+#
