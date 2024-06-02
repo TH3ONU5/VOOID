@@ -9,3 +9,29 @@
 
 # Bilder
 <img src="https://github.com/TH3ONU5/VOOID/blob/main/agency/images/4.png" width="100%" max-width="100%" align="center">
+
+#Funktionen
+<ul>
+  <li>
+    CMS
+  </li>
+  <li>
+    Kontaktformular
+  </li>
+  <li>
+    Spam Schutz
+  </li>
+</ul>
+
+#Geplante Funktionen
+<ul>
+  <li>
+  Admin Login Brute force schutz (In bearbeitung)
+  </li>
+  <li>
+    User suche im Admin Panel (In bearbeitung)
+  </li>
+  <li>
+    KI-ASSISTENT (In Planung)
+  </li>
+</ul>
