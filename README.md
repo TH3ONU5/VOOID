@@ -1,5 +1,4 @@
 # VOOID
-Eine umfassende Plattform für den Kauf von Websites. Diese Anwendung bietet eine intuitive Benutzeroberfläche und eine Vielzahl von Funktionen, die den Kaufprozess von Websites effizient und benutzerfreundlich gestalten.
-
+Eine kleine Plattform für den Verkauf von Websites, die sowohl von kleinen Agenturen als auch von Privatpersonen betrieben werden kann. Diese Anwendung bietet eine intuitive Benutzeroberfläche und verfügt über ein Content-Management-System (CMS).
 
 <h1 align="center">DOKUMENTATION KOMMT BALD!!!</h1>
