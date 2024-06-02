@@ -10,7 +10,7 @@
 # Bilder
 <img src="https://github.com/TH3ONU5/VOOID/blob/main/agency/images/4.png" width="100%" max-width="100%" align="center">
 
-#Funktionen
+# Funktionen
 <ul>
   <li>
     CMS
@@ -23,7 +23,7 @@
   </li>
 </ul>
 
-#Geplante Funktionen
+# Geplante Funktionen
 <ul>
   <li>
   Admin Login Brute force schutz (In bearbeitung)
