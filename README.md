@@ -44,4 +44,4 @@
 
 # Admin Panel Dokumentation
 
-
+<img src="https://github.com/TH3ONU5/VOOID/blob/main/agency/images/nav.png" width="100%" max-width="100%" align="center">
