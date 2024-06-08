@@ -44,6 +44,6 @@
 
 # Admin Panel Dokumentation
 
-# Sidebar
+<h2> Sidebar </h2>
 
 <img src="https://github.com/TH3ONU5/VOOID/blob/main/agency/images/sidebar.png" width="100%" max-width="100%" align="center">
