@@ -50,7 +50,7 @@
 
 <h2> Startseite </h2>
 
-<img src="https://github.com/TH3ONU5/VOOID/blob/main/agency/images/startseite" width="100%" max-width="100%" align="center">
+<img src="https://github.com/TH3ONU5/VOOID/blob/main/agency/images/startseite.png" width="100%" max-width="100%" align="center">
 
 <h2> Einzel sicht Kunde </h2>
 
