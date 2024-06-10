@@ -59,3 +59,7 @@
 <h2> Unbekannt </h2>
 
 <img src="https://github.com/TH3ONU5/VOOID/blob/main/agency/images/unbekannt.png" width="100%" max-width="100%" align="center">
+
+<h2> Manuel Neue Kunde Hinzufügen </h2>
+
+<img src="https://github.com/TH3ONU5/VOOID/blob/main/agency/images/manuel.png" width="100%" max-width="100%" align="center">
