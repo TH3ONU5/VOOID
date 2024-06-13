@@ -31,6 +31,9 @@
   <li>
     User suche im Admin Panel <strong>(In bearbeitung)</strong>
   </li>
+   <li>
+    Verschlüsselung der Kunden Daten <strong>(In bearbeitung)</strong>
+  </li>
   <li>
     KI-ASSISTENT <strong>(In Planung)</strong>
   </li>
