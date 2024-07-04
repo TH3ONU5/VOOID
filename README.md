@@ -1,4 +1,4 @@
-# Vooid
+# Vooid <== Das zusehene Projekt ist nicht "up to date" mittlerweile sind einige funktionen dazugekommen
 
 <img src="https://github.com/TH3ONU5/VOOID/blob/main/agency/images/main.png" width="1400px" max-width="100%">
 
