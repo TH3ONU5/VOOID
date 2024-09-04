@@ -51,7 +51,7 @@
                                 <a href="http://localhost/agency/homepage/#contact_us" class="font-medium ease-in duration-300 hover:text-white">Contact us</a>
                             </li>
                             <li>
-                                <a href="http://localhost/agency/ki-assistent/" class="font-medium ease-in duration-300 hover:text-white">AI-Assistent</a>
+                                <a href="http://localhost/agency/reviews/" class="font-medium ease-in duration-300 hover:text-white">Reviews</a>
                             </li>
                         </ul>
                     </div>

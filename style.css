@@ -3535,6 +3535,14 @@ body {
   text-align: center;
 }
 
+.text-left {
+  text-align: left !important;
+}
+
+.text-right-webkit {
+  text-align: -webkit-right !important;
+}
+
 .text-2xl {
   font-size: 1.5rem;
   line-height: 2rem;
@@ -3648,6 +3656,10 @@ body {
 
 .text-white\/80 {
   color: rgb(255 255 255/0.8);
+}
+
+.text-gray {
+  color: gray !important;
 }
 
 .\!opacity-100 {
@@ -5645,6 +5657,10 @@ html {
   align-items: center !important;
 }
 
+.max-w-1150px {
+  max-width: 1150px !important;
+}
+
 .mySlides {
   display: none;
 }
@@ -5728,6 +5744,10 @@ html {
 
 .gap-10px {
   gap: 10px;
+}
+
+.bg-purpil {
+  background: rgb(111 21 250) !important;
 }
 
 #success {

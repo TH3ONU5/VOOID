@@ -352,7 +352,7 @@ if (isset($_POST["submit"])) {
                                     <a href="../../homepage/#contact_us" class="font-medium ease-in duration-300 hover:text-white">Contact us</a>
                                 </li>
                                 <li>
-                                    <a href="../.././ai-assistent/" class="font-medium ease-in duration-300 hover:text-white">AI-Assistent</a>
+                                    <a href="../.././reviews/" class="font-medium ease-in duration-300 hover:text-white">Reviews</a>
                                 </li>
                             </ul>
                         </div>

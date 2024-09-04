@@ -438,7 +438,7 @@
                                     <a href="../../homepage/#contact_us" class="font-medium ease-in duration-300 hover:text-white">Contact us</a>
                                 </li>
                                 <li>
-                                    <a href="../.././ai-assistent/" class="font-medium ease-in duration-300 hover:text-white">AI-Assistent</a>
+                                    <a href="../.././reviews/" class="font-medium ease-in duration-300 hover:text-white">Reviews</a>
                                 </li>
                             </ul>
                         </div>
@@ -593,13 +593,8 @@ $username = "root";
 $password = "";
 $dbname = "agencyDB";
 
-// Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
 
 function checkSubmissionLimit($conn, $ip)
 {
