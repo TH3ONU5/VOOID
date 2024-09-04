@@ -1,0 +1,136 @@
+/* Webpixels CSS */
+/* Utility and component-centric Design System based on Bootstrap for fast, responsive UI development */
+/* URL: https://github.com/webpixels/css */
+
+@import url(https://unpkg.com/@webpixels/css@1.1.5/dist/index.css);
+
+/* Bootstrap Icons */
+@import url("https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.4.0/font/bootstrap-icons.min.css");
+
+html {
+  word-break: break-all !important;
+}
+
+.text-fav {
+  color: #5c60f5 !important;
+}
+
+.bg-soft-warning {
+  background-color: #ccd0ff !important;
+}
+
+.fs-35px {
+  font-size: 35px !important;
+}
+
+.bg-dark-blue {
+  background-color: #111462d9 !important;
+}
+
+.border-logout {
+  border-radius: 0 50px 50px 0 !important;
+}
+
+.h-40px {
+  height: 40px !important;
+}
+
+.ms-10px {
+  margin-left: 10px !important;
+}
+
+#success {
+  translate: -50% -50%;
+  top: 50%;
+  left: 50%;
+  position: fixed;
+  z-index: 999;
+  padding: 10px;
+  width: 350px;
+  background: #1c0e3f;
+  border-radius: 9px;
+  text-align: center;
+  gap: 1em;
+  display: grid;
+  color: #b4a0ff;
+  font-weight: bold;
+  box-shadow: 0px 0px 50px 5px #9b84ab !important;
+}
+
+.w-fit-content {
+  width: fit-content !important;
+}
+
+.d-flex {
+  display: flex !important;
+}
+
+.d-grid {
+  display: grid !important;
+}
+
+.float-end {
+  float: right !important;
+}
+
+.gap-8px {
+  gap: 8px !important;
+}
+
+.w-100 {
+  width: 100% !important;
+}
+
+.mb-2em {
+  margin-bottom: 2em !important;
+}
+
+.bg-blue-strong {
+  background-color: #7983ff !important;
+}
+
+.justify-space-evenly {
+  justify-content: space-evenly !important;
+}
+
+.mb-1em {
+  margin-bottom: 1em !important;
+}
+
+.w-15 {
+  width: 15% !important;
+}
+
+.p-1em {
+  padding: 1em !important;
+}
+
+.ip-lus {
+  border: solid #9071ffbd 3px;
+  font-weight: bold;
+  border-radius: 5px;
+  padding: 4px;
+  width: -webkit-fill-available;
+}
+
+::placeholder {
+    color: black;
+}
+
+.d-flex-nrespons {
+    display: flex;
+}
+
+.gap-2em {
+    gap: 2em;
+}
+
+.se-sb {
+    background: #8461ffbd;
+    border: solid #836cd3bd 1px;
+    border-radius: 5px;
+    padding: 4px;
+    color: white;
+    font-weight: bold;
+    width: -webkit-fill-available;
+}
