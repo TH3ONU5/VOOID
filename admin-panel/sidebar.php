@@ -56,6 +56,11 @@
                         <i class="bi bi-search"></i> Search
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="./reviews.php">
+                        <i class="bi bi-heart"></i> Reviews
+                    </a>
+                </li>
             </ul>
             <hr class="navbar-divider my-5 opacity-20">
             <ul class="navbar-nav mb-md-4">

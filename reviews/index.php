@@ -445,6 +445,7 @@ if (isset($_POST['feedback_form'])) {
                 } else {
                     echo 'No reviews have been provided at this time.';
                 }
+                $conn->close();
                 ?>
 
             </div>
