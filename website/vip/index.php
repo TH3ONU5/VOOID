@@ -617,7 +617,7 @@ function checkSubmissionLimit($conn, $ip)
         }
     }
 
-    return true; 
+    return true;
 }
 
 function cleanInput($input)
@@ -694,16 +694,30 @@ if (isset($_POST['submit'])) {
     if (empty($errors)) {
         saveSubmissionCount($conn, $userIP);
 
-        $sql = "INSERT INTO contact (firstname, lastname, company, phone, email, message, send, status, matter)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("sssssssss", $firstname, $lastname, $company, $phone, $email, $message, $date, $new_client, $matter);
-        if ($stmt->execute()) {
-            echo "<div id='success'>Form submitted successfully!</div>";
-            echo "<script>setTimeout(() => {success.style.display='none';},3000);</script>";
+        if (empty($company)) {
+            $sql = "INSERT INTO contact (firstname, lastname, phone, email, message, send, status, matter)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("ssssssss", $firstname, $lastname, $phone, $email, $message, $date, $new_client, $matter);
+            if ($stmt->execute()) {
+                echo "<div id='success'>Form submitted successfully!</div>";
+                echo "<script>setTimeout(() => {success.style.display='none';},3000);</script>";
+            } else {
+                echo "<div id='success'>Something went wrong. Please try again!</div>";
+                echo "<script>setTimeout(() => {success.style.display='none';},3000);</script>";
+            }
         } else {
-            echo "<div id='success'>Something went wrong. Please try again!</div>";
-            echo "<script>setTimeout(() => {success.style.display='none';},3000);</script>";
+            $sql = "INSERT INTO contact (firstname, lastname, company, phone, email, message, send, status, matter)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("sssssssss", $firstname, $lastname, $company, $phone, $email, $message, $date, $new_client, $matter);
+            if ($stmt->execute()) {
+                echo "<div id='success'>Form submitted successfully!</div>";
+                echo "<script>setTimeout(() => {success.style.display='none';},3000);</script>";
+            } else {
+                echo "<div id='success'>Something went wrong. Please try again!</div>";
+                echo "<script>setTimeout(() => {success.style.display='none';},3000);</script>";
+            }
         }
     } else {
         echo "<div id='success'>";
