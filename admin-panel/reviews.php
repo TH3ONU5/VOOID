@@ -78,6 +78,14 @@ if (isset($_POST['delete'])) {
             margin: 0 auto;
         }
 
+        .delete {
+            border-radius: 5px;
+            font-size: 15px;
+            background: red;
+            color: white;
+            font-weight: bold;
+        }
+
         .review-header {
             display: flex;
             align-items: center;
@@ -333,7 +341,7 @@ if (isset($_POST['delete'])) {
    </div>
    <div class="review-actions">  
     <form action="" method="post" class="flag">
-     <button type="submit" name="delete" value="' . $id . '">Delete</button>
+     <button type="submit" name="delete" class="delete" value="' . $id . '">Delete</button>
      </i>
     </form>
    </div>

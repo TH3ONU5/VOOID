@@ -45,12 +45,12 @@ if (isset($_POST['delete'])) {
 
     if ($stmt->execute()) {
         echo "<div id='success'>";
-        echo "<div id=''><span>Daten mit der ID " . $user_id . " erfolgreich gelöscht</span></div>";
+        echo "<div id=''><span>Data with the ID " . $user_id . " successfully deleted.</span></div>";
         echo "</div>";
         echo "<script>setTimeout(() => {document.getElementById('success').style.display='none';}, 3500);</script>";
     } else {
         echo "<div id='error'>";
-        echo "<div id=''><span>Es ist ein Fehler aufgetreten!</span></div>";
+        echo "<div id=''><span>Somthing went wrong. Try again.</span></div>";
         echo "</div>";
         echo "<script>setTimeout(() => {document.getElementById('error').style.display='none';}, 3500);</script>";
     }
