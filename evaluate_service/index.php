@@ -1,89 +1,218 @@
+<?php
+session_start();
+session_regenerate_id(true);
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "agencyDB";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+function cleanInput($input)
+{
+    $input = trim($input);
+    $input = stripslashes($input);
+    $input = htmlspecialchars($input, ENT_QUOTES, 'UTF-8');
+    return $input;
+}
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+if (isset($_POST['feedback_form'])) {
+    $firstname = cleanInput($_POST['firstname']);
+    $lastname = cleanInput($_POST['lastname']);
+    $email = cleanInput($_POST['email']);
+    $titel = cleanInput($_POST['titel']);
+    $feedback = cleanInput($_POST['feedback']);
+    $rating = cleanInput($_POST['rating']);
+    $terms = cleanInput($_POST['terms']);
+    $userIP = $_SERVER['REMOTE_ADDR'];
+
+    $error = '';
+
+    if (empty($firstname)) {
+        $error = "Please enter your first name.";
+    } elseif (!preg_match('/^[a-zA-Z\s\'-]+$/', $_POST['firstname'])) {
+        $errors[] = "Invalid first name format.";
+    }
+
+    if (empty($lastname)) {
+        $error = "Please enter your last name.";
+    } elseif (!preg_match('/^[a-zA-Z\s\'-]+$/', $_POST['lastname'])) {
+        $errors[] = "Invalid last name format.";
+    }
+
+    if (empty($terms)) {
+        $error = "Please accept the terms.";
+    }
+
+    if (empty($email)) {
+        $error = "Please enter your email.";
+    } elseif (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+        $errors[] = "Invalid email address format.";
+    }
+
+    if (empty($titel)) {
+        $error = "Please enter a feedback titel.";
+    }
+
+    if (strlen($firstname) > 25) {
+        $error = "First name should not be more than 50 characters.";
+    }
+
+    if (strlen($lastname) > 25) {
+        $error = "Last name should not be more than 50 characters.";
+    }
+
+    if (strlen($email) > 50) {
+        $error = "Email name should not be more than 50 characters.";
+    }
+
+    if (strlen($titel) > 50) {
+        $error = "Feedback titel should not be more than 50 characters.";
+    }
+
+    if (strlen($feedback) > 2500) {
+        $error = "Feedback should not be more than 3000 characters.";
+    }
+
+    if ($rating == null) {
+        $error = "Please select a rating.";
+    } elseif (!in_array($_POST['rating'], range(1, 5))) {
+        $error = "Invalid rating value.";
+    }
+
+    if (empty($error)) {
+
+        $stmt = $conn->prepare("SELECT ip FROM rating WHERE ip = ?");
+        $stmt->bind_param('s', $userIP);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            echo "<div id='success'>You have already submitted an assessment.</div>";
+            echo "<script>setTimeout(() => {success.style.display='none';},3000);</script>";
+            $stmt->close();
+        } else {
+            $stmt->close();
+            $sql = "INSERT INTO rating (firstname, lastname, email, titel, feedback, rating, ip)
+            VALUES (?, ?, ?, ?, ?, ?, ?)";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("sssssis", $firstname, $lastname, $email, $titel, $feedback, $rating, $userIP);
+            if ($stmt->execute()) {
+                $new_id = $conn->insert_id;
+                $msg = "<div id='success'>Feedback submitted successfully!</div> <script>setTimeout(() => {success.style.display='none';},3000);</script>";
+                $_SESSION['msg'] = $msg;
+                header('Location: ../reviews/#' . $new_id . '');
+                exit();
+            } else {
+                echo "<div id='success'>Something went wrong. Please try again!</div>";
+                echo "<script>setTimeout(() => {success.style.display='none';},3000);</script>";
+            }
+            $stmt->close();
+        }
+    } else {
+        echo "<div id='success'>" . $error . "</div>";
+        echo "<script>setTimeout(() => {success.style.display='none';},3000);</script>";
+    }
+}
+$conn->close();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VOOID | Web Administration </title>
+    <title>VOOID | Evaluate service </title>
     <link rel="icon/image" href="">
-    <link rel="stylesheet" href="../../style.css" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" integrity="sha384-..." crossorigin="anonymous">
     <style>
-        @import url("https://fonts.googleapis.com/css2?family=Sora:wght@100;200;300;400;500;600;700&display=swap");
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
 
-        .accordion {
+        .popup-wrapper {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 100000 !important;
+        }
+
+        .popup-box {
+            padding: 20px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+            background: #000000;
+            border: 2px solid #1C1C1C;
+            border-radius: 10px;
+        }
+
+        .close-popup-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .form-layout {
             display: flex;
             flex-direction: column;
-            max-width: 991px;
-            min-width: 320px;
         }
 
-        .accordion-item {
-            margin-top: 16px;
-            border-radius: 6px;
-            background: transparent;
+        .form-layout label {
+            margin-bottom: 5px;
         }
 
-        .accordion-item .accordion-item-title {
-            position: relative;
-            margin: 0;
-            display: flex;
-            width: 100%;
-            font-size: 22px;
-            cursor: pointer;
-            justify-content: space-between;
-            flex-direction: row-reverse;
-            box-sizing: border-box;
-            align-items: center;
+        .form-layout input,
+        .form-layout textarea {
+            margin-bottom: 10px;
         }
 
-        .accordion-item .accordion-item-desc {
+        .rating {
+            direction: rtl;
+            font-size: 2rem;
+            unicode-bidi: bidi-override;
+            display: inline-block;
+        }
+
+        .rating input {
             display: none;
-            font-size: 14px;
-            line-height: 22px;
-            color: #918ea0;
-            padding: 15px 0 15px 0;
-            box-sizing: border-box;
         }
 
-        .accordion-item input[type="checkbox"] {
-            position: absolute;
-            height: 0;
-            width: 0;
-            opacity: 0;
+        .rating label {
+            color: #ddd;
+            cursor: pointer;
+            display: inline-block;
         }
 
-        .accordion-item input[type="checkbox"]:checked~.accordion-item-desc {
-            display: block;
+        .rating input:checked~label {
+            color: #aa00f1;
         }
 
-        .accordion-item input[type="checkbox"]:checked~.accordion-item-title .icon:after {
-            content: "-";
-            font-size: 40px;
-            position: relative;
-            top: -3px;
+        .rating label:hover,
+        .rating label:hover~label {
+            color: #aa00f1;
         }
 
-        .accordion-item input[type="checkbox"]:checked~.accordion-item-title {
-            color: white !important;
-        }
-
-        .accordion-item input[type="checkbox"]~.accordion-item-title .icon:after {
-            content: "+";
-            font-size: 40px;
-        }
-
-        .accordion-item:first-child {
-            margin-top: 0;
-        }
-
-        .accordion-item .icon {
-            margin-left: 14px;
-        }
-
-        @media screen and (max-width: 767px) {
-            .accordion-item-title {
-                font-size: 17px !important;
+        @media (max-width: 600px) {
+            .popup-box {
+                width: 95%;
             }
         }
     </style>
@@ -94,8 +223,8 @@
     <header class="fixed left-0 top-0 w-full z-9999 py-7 lg:py-0 bg-dark/70 backdrop-blur-lg shadow !py-4 lg:!py-0 transition duration-100 before:absolute before:w-full before:h-[1px] before:bottom-0 before:left-0 before:features-row-border" :class="{ 'bg-dark/70 backdrop-blur-lg shadow !py-4 lg:!py-0 transition duration-100 before:absolute before:w-full before:h-[1px] before:bottom-0 before:left-0 before:features-row-border' : stickyMenu }" @scroll.window="stickyMenu = (window.scrollY > 0) ? true : false">
         <div class="max-w-[1170px] mx-auto px-4 sm:px-8 xl:px-0 lg:flex items-center justify-between relative">
             <div class="w-full lg:w-1/4 flex items-center justify-between">
-                <a href="../../homepage/">
-                    <img src="../../images/VOOID.png" alt="Logo" class="h-38px">
+                <a href="../homepage/">
+                    <img src="../images/VOOID.png" alt="Logo" class="h-38px">
                 </a>
 
                 <button class="lg:hidden block" @click="navigationOpen = !navigationOpen">
@@ -117,25 +246,25 @@
                 <nav>
                     <ul class="flex lg:items-center flex-col lg:flex-row gap-5 lg:gap-2">
                         <li class="nav__menu lg:py-7 lg:!py-4" :class="{ 'lg:!py-4' : stickyMenu }">
-                            <a href="../../homepage/#homepage" class="relative text-white/80 text-sm py-1.5 px-4 border border-transparent hover:text-white hover:nav-gradient !text-white nav-gradient" :class="{'!text-white nav-gradient' :page === 'home'}">Homepage</a>
+                            <a href="../homepage/#homepage" class="relative text-white/80 text-sm py-1.5 px-4 border border-transparent hover:text-white hover:nav-gradient !text-white nav-gradient" :class="{'!text-white nav-gradient' :page === 'home'}">Homepage</a>
                         </li>
                         <li class="nav__menu lg:py-7 lg:!py-4" :class="{ 'lg:!py-4' : stickyMenu }">
-                            <a href="../../homepage/#why_we" class="relative text-white/80 text-sm py-1.5 px-4 border border-transparent hover:text-white hover:nav-gradient">Why we</a>
+                            <a href="../homepage/#why_we" class="relative text-white/80 text-sm py-1.5 px-4 border border-transparent hover:text-white hover:nav-gradient">Why we</a>
                         </li>
                         <li class="nav__menu lg:py-7 lg:!py-4" :class="{ 'lg:!py-4' : stickyMenu }">
-                            <a href="../../homepage/#prices" class="relative text-white/80 text-sm py-1.5 px-4 border border-transparent hover:text-white hover:nav-gradient">Prices</a>
+                            <a href="../homepage/#prices" class="relative text-white/80 text-sm py-1.5 px-4 border border-transparent hover:text-white hover:nav-gradient">Prices</a>
                         </li>
                         <li class="nav__menu lg:py-7 lg:!py-4" :class="{ 'lg:!py-4' : stickyMenu }">
-                            <a href="../../homepage/#contact_us" class="relative text-white/80 text-sm py-1.5 px-4 border border-transparent hover:text-white hover:nav-gradient">Contact us</a>
+                            <a href="../homepage/#contact_us" class="relative text-white/80 text-sm py-1.5 px-4 border border-transparent hover:text-white hover:nav-gradient">Contact us</a>
                         </li>
                         <li class="nav__menu lg:py-7 lg:!py-4" :class="{ 'lg:!py-4' : stickyMenu }">
-                            <a href="../.././team-services" class="relative text-white/80 text-sm py-1.5 px-4 border border-transparent hover:text-white hover:nav-gradient">Team
+                            <a href=".././team-services" class="relative text-white/80 text-sm py-1.5 px-4 border border-transparent hover:text-white hover:nav-gradient">Team
                                 & Services</a>
                         </li>
                     </ul>
                 </nav>
                 <div class="flex items-center gap-6 mt-7 lg:mt-0">
-                    <a href="../.././ai-assistent" class="button-border-gradient relative rounded-lg text-white text-sm flex items-center gap-1.5 py-2 px-4.5 shadow-button hover:button-gradient-hover hover:shadow-none">
+                    <a href=".././ai-assistent" class="button-border-gradient relative rounded-lg text-white text-sm flex items-center gap-1.5 py-2 px-4.5 shadow-button hover:button-gradient-hover hover:shadow-none">
                         AI-Assistent
                     </a>
                 </div>
@@ -162,77 +291,12 @@
             </div>
             <div class="text-center px-4">
                 <h1 class="font-extrabold text-heading-2 text-white mb-5.5 word-break">
-                    Administrationsservice
+                    Evaluate service
                 </h1>
                 <ul class="flex items-center justify-center gap-2">
-                    <li class="font-medium"><a href="../../index.html">Startseite</a></li>
-                    <li class="font-medium">/ Administrationsservice</li>
+                    <li class="font-medium"><a href="../index.html">Homepage</a></li>
+                    <li class="font-medium">/ Evaluate service</li>
                 </ul>
-            </div>
-        </section>
-
-        <section class="mb-425">
-            <div class="max-w-[1170px] mx-auto px-4 sm:px-8 xl:px-0">
-                <div class="grid sm:grid-cols-12 gap-7.5" data-highlighter="">
-                    <div class="sm:col-span-12" style="--mouse-x: 230px; --mouse-y: 486px;">
-                        <div class="relative rounded-3xl features-box-border">
-                            <div class="relative overflow-hidden rounded-3xl p-10 xl:p-15 box-hover">
-                                <div class="flex items-center justify-between relative z-20">
-                                    <div class="w-full">
-                                        <h3 class="text-white mb-4.5 font-bold text-heading-4">
-                                            Information
-                                        </h3>
-                                        <p class="font-medium mb-10">
-                                            Your website is ready to go, but you don't know how to get it online. Arming servers against attacks, purchasing domains and setting up SSL certificates can be complex. But don't worry! We'll take care of it and relieve you of all your worries. Our all-round service includes securing your servers, round-the-clock protection against threats and backing up your data. With us at your side, you can relax and concentrate on your core business while your online presence is in the best hands.
-                                        <ul class="flex flex-col gap-4 mb-3em">
-                                            <li class="flex items-center gap-5">
-                                                <img src="../../images/pricing-icon-04.svg" alt="icon">
-                                                <span class="font-medium">Server configuration</span>
-                                            </li>
-                                            <li class="flex items-center gap-5">
-                                                <img src="../../images/pricing-icon-04.svg" alt="icon">
-                                                <span class="font-medium">Domain configuration</span>
-                                            </li>
-                                            <li class="flex items-center gap-5">
-                                                <img src="../../images/pricing-icon-04.svg" alt="icon">
-                                                <span class="font-medium">SSL certificate configuration</span>
-                                            </li>
-                                            <li class="flex items-center gap-5">
-                                                <img src="../../images/pricing-icon-04.svg" alt="icon">
-                                                <span class="font-medium">Security updates &amp; pentests</span>
-                                            </li>
-                                            <li class="flex items-center gap-5">
-                                                <img src="../../images/pricing-icon-04.svg" alt="icon">
-                                                <span class="font-medium">Backups</span>
-                                            </li>
-                                        </ul>
-                                        </p>
-                                        <a href="#book" class="features-button-gradient relative inline-flex items-center gap-1.5 rounded-full py-3 px-6 text-white text-sm ease-in duration-300 hover:shadow-button">
-                                            Book now
-                                            <svg width="14" height="12" viewBox="0 0 14 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M13.3992 5.60002L8.22422 0.350024C7.99922 0.125024 7.64922 0.125024 7.42422 0.350024C7.19922 0.575024 7.19922 0.925025 7.42422 1.15002L11.6242 5.42503H0.999219C0.699219 5.42503 0.449219 5.67502 0.449219 5.97502C0.449219 6.27502 0.699219 6.55003 0.999219 6.55003H11.6742L7.42422 10.875C7.19922 11.1 7.19922 11.45 7.42422 11.675C7.52422 11.775 7.67422 11.825 7.82422 11.825C7.97422 11.825 8.12422 11.775 8.22422 11.65L13.3992 6.40002C13.6242 6.17502 13.6242 5.82502 13.3992 5.60002Z" fill="white"></path>
-                                            </svg>
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <div class="absolute -z-10 pointer-events-none inset-0 overflow-hidden -mx-28">
-                                    <span class="absolute right-0 bottom-0"><img src="../../images/shape-01.png" alt="shape"></span>
-                                    <span class="absolute left-0 top-0"><img src="../../images/shape-02.svg" alt="shape"></span>
-                                    <span class="absolute left-1/2 -translate-x-1/2 bottom-0">
-                                        <img src="../../images/blur-04.svg" alt="blur" class="max-w-none">
-                                    </span>
-                                    <span class="absolute left-1/2 -translate-x-1/2 bottom-0">
-                                        <img src="../../images/blur-05.svg" alt="blur" class="max-w-none">
-                                    </span>
-                                    <span class="absolute right-0 top-0">
-                                        <img src="../../images/shape-03.svg" alt="shape" class="max-w-none">
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </section>
 
@@ -268,23 +332,23 @@
 
                     <div class="absolute -z-10 pointer-events-none inset-0 overflow-hidden">
                         <span class="absolute left-1/2 top-0 -translate-x-1/2 -z-1">
-                            <img src="../../images/blur-19.svg" alt="blur" class="max-w-none">
+                            <img src="../images/blur-19.svg" alt="blur" class="max-w-none">
                         </span>
                         <span class="absolute left-1/2 top-0 -translate-x-1/2 -z-1">
-                            <img src="../../images/blur-20.svg" alt="blur" class="max-w-none">
+                            <img src="../images/blur-20.svg" alt="blur" class="max-w-none">
                         </span>
                         <span class="absolute left-1/2 top-0 -translate-x-1/2 -z-1">
-                            <img src="../../images/blur-21.svg" alt="blur" class="max-w-none">
+                            <img src="../images/blur-21.svg" alt="blur" class="max-w-none">
                         </span>
                     </div>
 
                     <div class="wow fadeInUp mb-16 text-center relative z-999" id="" style="visibility: visible;">
                         <span class="hero-subtitle-gradient relative mb-4 font-medium text-sm inline-flex items-center gap-2 py-2 px-4.5 rounded-full">
-                            <img src="../../images/icon-title.svg" alt="icon">
-                            <span class="hero-subtitle-text"> Book now! </span>
+                            <img src="../images/icon-title.svg" alt="icon">
+                            <span class="hero-subtitle-text"> What did you experience? </span>
                         </span>
                         <h2 class="text-white mb-4.5 text-2xl font-extrabold sm:text-4xl xl:text-heading-2">
-                            Website Administration
+                            Evaluate service
                         </h2>
                         <p class="max-w-[714px] mx-auto font-medium">
 
@@ -292,14 +356,14 @@
                     </div>
 
                     <div class="form-box-gradient relative overflow-hidden rounded-[25px] bg-dark p-6 sm:p-8 xl:p-15">
-                        <form action="#book" method="post" class="relative z-10">
+                        <form action="" method="post" class="relative z-10">
                             <div class="-mx-4 xl:-mx-10 flex flex-wrap">
                                 <div class="w-full px-4 xl:px-5 md:w-1/2">
                                     <div class="mb-9.5">
                                         <label for="firstname" class="text-white mb-2.5 block font-medium">
                                             Firstname
                                         </label>
-                                        <input id="firstname" type="text" name="firstname" placeholder="Please enter your Firstname" class="rounded-lg border border-white/[0.12] bg-white/[0.05] focus:border-purple w-full py-3 px-6 outline-none" maxlength="50" autocomplete="off" required>
+                                        <input id="firstname" type="text" name="firstname" placeholder="Please enter your Firstname" class="rounded-lg border border-white/[0.12] bg-white/[0.05] focus:border-purple w-full py-3 px-6 outline-none" maxlength="25" autocomplete="off" required>
                                     </div>
                                 </div>
                                 <div class="w-full px-4 xl:px-5 md:w-1/2">
@@ -307,55 +371,61 @@
                                         <label for="lastname" class="text-white mb-2.5 block font-medium">
                                             Lastname
                                         </label>
-                                        <input id="lastname" type="text" name="lastname" placeholder="Please enter your Lastname" class="rounded-lg border border-white/[0.12] bg-white/[0.05] focus:border-purple w-full py-3 px-6 outline-none" maxlength="50" autocomplete="off" required>
+                                        <input id="lastname" type="text" name="lastname" placeholder="Please enter your Lastname" class="rounded-lg border border-white/[0.12] bg-white/[0.05] focus:border-purple w-full py-3 px-6 outline-none" maxlength="25" autocomplete="off" required>
                                     </div>
                                 </div>
                                 <div class="w-full px-4 xl:px-5">
-                                    <div class="mb-9.5">
-                                        <label for="company" class="text-white mb-2.5 block font-medium">
-                                            Company
-                                        </label>
-                                        <input type="text" id="company" name="company" placeholder="Please enter your Companys name (*optional)" rows="6" class="rounded-lg border border-white/[0.12] bg-white/[0.05] focus:border-purple w-full py-3 px-6 outline-none" autocomplete="off">
-                                    </div>
-                                </div>
-                                <div class="w-full px-4 xl:px-5 md:w-1/2">
-                                    <div class="mb-9.5">
-                                        <label for="phone" class="text-white mb-2.5 block font-medium">
-                                            Phone number
-                                        </label>
-                                        <input id="phone" type="tel" name="phone" placeholder="Please enter your phone number" class="rounded-lg border border-white/[0.12] bg-white/[0.05] focus:border-purple w-full py-3 px-6 outline-none" minlength="10" maxlength="15" autocomplete="off" required>
-                                    </div>
-                                </div>
-                                <div class="w-full px-4 xl:px-5 md:w-1/2">
                                     <div class="mb-9.5">
                                         <label for="email" class="text-white mb-2.5 block font-medium">
                                             Email
                                         </label>
-                                        <input id="email" type="text" name="email" placeholder="Please enter your email address" class="rounded-lg border border-white/[0.12] bg-white/[0.05] focus:border-purple w-full py-3 px-6 outline-none" maxlength="100" autocomplete="off" required>
+                                        <input id="email" type="text" name="email" placeholder="Please enter your email address" class="rounded-lg border border-white/[0.12] bg-white/[0.05] focus:border-purple w-full py-3 px-6 outline-none" maxlength="50" autocomplete="off" required>
+                                    </div>
+                                </div>
+                                <div class="w-full px-4 xl:px-5">
+                                    <div class="mb-9.5">
+                                        <label for="titel" class="text-white mb-2.5 block font-medium">
+                                            Feedback titel
+                                        </label>
+                                        <input id="titel" type="text" name="titel" placeholder="Please enter a feedback titel" class="rounded-lg border border-white/[0.12] bg-white/[0.05] focus:border-purple w-full py-3 px-6 outline-none" maxlength="50" autocomplete="off" required>
                                     </div>
                                 </div>
                                 <div class="w-full px-4 xl:px-5">
                                     <div class="mb-10">
-                                        <label for="message" class="text-white mb-2.5 block font-medium">
-                                            Message
+                                        <label for="feedback" class="text-white mb-2.5 block font-medium">
+                                            Feedback
                                         </label>
-                                        <textarea id="message" name="message" placeholder="Please enter your message" rows="6" class="rounded-lg border border-white/[0.12] bg-white/[0.05] focus:border-purple w-full py-5 px-6 outline-none" required></textarea>
+                                        <textarea id="feedback" name="feedback" placeholder="Please enter a feedback" rows="6" class="rounded-lg border border-white/[0.12] bg-white/[0.05] focus:border-purple w-full py-5 px-6 outline-none" maxlength="2500" required></textarea>
+                                    </div>
+                                </div>
+                                <div class="w-full px-4 xl:px-5">
+                                    <div class="mb-10">
+                                        <label for="stars" class="text-white mb-2.5 block font-medium">
+                                            Stars:
+                                        </label>
+                                        <div class="rating" id="stars">
+                                            <input type="radio" id="star5" name="rating" value="5"><label for="star5"><i class="bi bi-star-fill"></i></label>
+                                            <input type="radio" id="star4" name="rating" value="4"><label for="star4"><i class="bi bi-star-fill"></i></label>
+                                            <input type="radio" id="star3" name="rating" value="3"><label for="star3"><i class="bi bi-star-fill"></i></label>
+                                            <input type="radio" id="star2" name="rating" value="2"><label for="star2"><i class="bi bi-star-fill"></i></label>
+                                            <input type="radio" id="star1" name="rating" value="1"><label for="star1"><i class="bi bi-star-fill"></i></label>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="w-full px-4 xl:px-5">
                                     <div class="mb-10 d-flex align-items-baseline gap-10px">
                                         <input type="checkbox" id="therms" class="fav-accent" name="terms" required>
                                         <label for="therms" class="text-white mb-2.5 block font-medium">
-                                            I have read the <a href="../../privacy_policy" target="_blank" class="underline-dashed fs-italic"> privacy policy </a> and agree with it.
+                                            I have read the <a href="../privacy_policy" target="_blank" class="underline-dashed fs-italic"> privacy policy </a> and agree with it.
                                         </label>
                                     </div>
                                 </div>
-                                <div class="w-full px-4 xl:px-5">
-                                    <div class="text-center">
-                                        <button type="submit" name="submit" class="hero-button-gradient inline-flex rounded-lg py-3 px-7 text-white font-medium ease-in duration-300 hover:opacity-80">
-                                            Send message
-                                        </button>
-                                    </div>
+                            </div>
+                            <div class="w-full px-4 xl:px-5">
+                                <div class="text-center">
+                                    <button type="submit" name="feedback_form" class="hero-button-gradient inline-flex rounded-lg py-3 px-7 text-white font-medium ease-in duration-300 hover:opacity-80">
+                                        Submit feedback
+                                    </button>
                                 </div>
                             </div>
                         </form>
@@ -366,101 +436,9 @@
 
     </main>
 
-
-    <footer class="relative z-10 pb-17.5 lg:pb-22.5 xl:pb-27.5">
-
-        <div class="absolute bottom-0 left-0 w-full flex flex-col gap-3 -z-1 opacity-50">
-            <div class="w-full h-[1.24px] footer-bg-gradient"></div>
-            <div class="w-full h-[2.47px] footer-bg-gradient"></div>
-            <div class="w-full h-[3.71px] footer-bg-gradient"></div>
-            <div class="w-full h-[4.99px] footer-bg-gradient"></div>
-            <div class="w-full h-[6.19px] footer-bg-gradient"></div>
-            <div class="w-full h-[7.42px] footer-bg-gradient"></div>
-            <div class="w-full h-[8.66px] footer-bg-gradient"></div>
-            <div class="w-full h-[9.90px] footer-bg-gradient"></div>
-            <div class="w-full h-[13px] footer-bg-gradient"></div>
-        </div>
-        <div class="max-w-[1170px] mx-auto px-4 sm:px-8 xl:px-0 relative pt-17.5">
-            <div class="w-full h-[1px] footer-divider-gradient absolute top-0 left-0"></div>
-            <div class="flex flex-wrap justify-between">
-                <div class="mb-10 max-w-[571px] w-full">
-                    <a class="mb-8.5 inline-block" href="../../index.php">
-                        <img src="../../images/VOOID.png" alt="Logo" class="h-35px">
-                    </a>
-                    <p class="mb-12 xl:w-4/5">
-                        We take your online presence to the next level.
-                    </p>
-                    <div class="flex items-center gap-5">
-                        <a href="https://www.instagram.com/vooid_official/" target="_blank" class="hover:text-white ease-in duration-300">
-                            <i class="bi bi-instagram fs-4"></i>
-                        </a>
-                        <a href="https://www.tiktok.com/@vooid.official" target="_blank" class="hover:text-white ease-in duration-300">
-                            <i class="bi bi-tiktok fs-4"></i>
-                        </a>
-                        <a href="https://github.com/th3onu5/" target="_blank" class="hover:text-white ease-in duration-300">
-                            <i class="bi bi-github fs-4"></i>
-                        </a>
-                    </div>
-                    <p class="font-medium mt-5.5">
-                        <a href="https://github.com/TH3ONU5" target="_blank"><strong>Created by TH3ONU5</strong></a>
-                    </p>
-                </div>
-                <div class="max-w-[571px] w-full">
-                    <div class="flex flex-col sm:flex-row sm:justify-between gap-10">
-                        <div>
-                            <h5 class="font-semibold text-white mb-5">Products</h5>
-                            <ul class="flex flex-col gap-3.5">
-                                <li>
-                                    <a href="../../homepage/#prices" class="font-medium ease-in duration-300 hover:text-white">Prices</a>
-                                </li>
-                                <li>
-                                    <a href="../../homepage/#why_we" class="font-medium ease-in duration-300 hover:text-white">Why we</a>
-                                </li>
-                                <li>
-                                    <a href="../../homepage/#contact_us" class="font-medium ease-in duration-300 hover:text-white">Contact us</a>
-                                </li>
-                                <li>
-                                    <a href="../.././reviews/" class="font-medium ease-in duration-300 hover:text-white">Reviews</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h5 class="font-semibold text-white mb-5">Company</h5>
-                            <ul class="flex flex-col gap-3.5">
-                                <li>
-                                    <a href="../../homepage/#homepage" class="font-medium ease-in duration-300 hover:text-white">Homepage</a>
-                                </li>
-                                <li>
-                                    <a href="../.././imprint/" class="font-medium ease-in duration-300 hover:text-white">Imprint</a>
-                                </li>
-                                <li>
-                                    <a href="../.././team-services/" class="font-medium ease-in duration-300 hover:text-white">Team & Services</a>
-                                </li>
-                                <li>
-                                    <a href="../.././privacy_policy/" class="font-medium ease-in duration-300 hover:text-white">Privacy Policy</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h5 class="font-semibold text-white mb-5">Support</h5>
-                            <ul class="flex flex-col gap-3.5">
-                                <li>
-                                    <a href="../.././ai-assistent/" class="font-medium ease-in duration-300 hover:text-white">KI-Assistent</a>
-                                </li>
-                                <li>
-                                    <a href="../../homepage/#contact_us" class="font-medium ease-in duration-300 hover:text-white">Contact us</a>
-                                </li>
-                                <li>
-                                    <a href="mailto:vooid@web.de" class="font-medium ease-in duration-300 hover:text-white">vooid@web.de</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
-
+    <?php
+    require_once('../footer.php');
+    ?>
 
     <button class="hidden items-center justify-center w-10 h-10 rounded-[4px] shadow-solid-5 bg-purple hover:opacity-70 fixed bottom-8 right-8 z-999" @click="window.scrollTo({top: 0, behavior: 'smooth'})" @scroll.window="scrollTop = (window.pageYOffset &gt; 50) ? true : false" :class="{ '!flex' : scrollTop }">
         <svg class="fill-white w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
@@ -469,100 +447,8 @@
         </svg>
     </button>
 
-    <script defer="defer" src="../../bundle.js"></script>
-    <script defer="defer" src="../../v84a3a4012de94ce1a686ba8c167c359c1696973893317.es" integrity="sha512-euoFGowhlaLqXsPWQ48qSkBSCFs3DPRyiwVu3FjR96cMPx+Fr+gpWRhIafcHwqwCqWS42RZhIudOvEI+Ckf6MA==" data-cf-beacon="{&quot;rayId&quot;:&quot;8674aa38aa149252&quot;,&quot;r&quot;:1,&quot;version&quot;:&quot;2024.3.0&quot;,&quot;token&quot;:&quot;9a6015d415bb4773a0bff22543062d3b&quot;}" crossorigin="anonymous"></script>
-    <script>
-        // Selektiere das Element
-        var element = document.getElementById('faq-items');
-
-        // Füge ein Event-Listener hinzu, um Änderungen zu überwachen
-        element.addEventListener('transitionend', function(event) {
-            if (event.propertyName === 'display') {
-                // Wenn die Klasse 'block' auf 'none' gesetzt wird, ändere die Klasse 'hidden' zu 'block'
-                if (element.style.display === 'none') {
-                    element.classList.add('hidden');
-                } else {
-                    element.classList.remove('hidden');
-                }
-            }
-        });
-    </script>
-
-    <script>
-        // slide show 1
-        var slideIndex = 1;
-        showDivs(slideIndex);
-
-        function plusDivs(n) {
-            showDivs(slideIndex += n);
-        }
-
-        function showDivs(n) {
-            var i;
-            var x = document.getElementsByClassName("mySlides1");
-            if (n > x.length) {
-                slideIndex = 1
-            }
-            if (n < 1) {
-                slideIndex = x.length
-            }
-            for (i = 0; i < x.length; i++) {
-                x[i].style.display = "none";
-            }
-            x[slideIndex - 1].style.display = "flex";
-        }
-    </script>
-
-    <script>
-        // slide show 1
-        var slideIndex = 1;
-        showDivs(slideIndex);
-
-        function plusDivs2(n) {
-            showDivs(slideIndex += n);
-        }
-
-        function showDivs(n) {
-            var i;
-            var x = document.getElementsByClassName("mySlides2");
-            if (n > x.length) {
-                slideIndex = 1
-            }
-            if (n < 1) {
-                slideIndex = x.length
-            }
-            for (i = 0; i < x.length; i++) {
-                x[i].style.display = "none";
-            }
-            x[slideIndex - 1].style.display = "flex";
-        }
-    </script>
-
-    <script>
-        // Imgae big
-
-        const modal = document.getElementById("modal");
-        const modalImg = document.getElementById("modal-img");
-        const images = document.querySelectorAll(".gallery-image");
-        const closeModal = document.getElementById("close");
-
-        images.forEach(image => {
-            image.addEventListener("click", () => {
-                modal.style.display = "flex";
-                modalImg.src = image.src;
-            });
-        });
-
-        closeModal.addEventListener("click", () => {
-            modal.style.display = "none";
-        });
-
-        window.addEventListener("click", (event) => {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        });
-    </script>
+    <script defer="defer" src="../bundle.js"></script>
+    <script defer="defer" src="../v84a3a4012de94ce1a686ba8c167c359c1696973893317.es" integrity="sha512-euoFGowhlaLqXsPWQ48qSkBSCFs3DPRyiwVu3FjR96cMPx+Fr+gpWRhIafcHwqwCqWS42RZhIudOvEI+Ckf6MA==" data-cf-beacon="{&quot;rayId&quot;:&quot;8674aa38aa149252&quot;,&quot;r&quot;:1,&quot;version&quot;:&quot;2024.3.0&quot;,&quot;token&quot;:&quot;9a6015d415bb4773a0bff22543062d3b&quot;}" crossorigin="anonymous"></script>
 
 </body>
 

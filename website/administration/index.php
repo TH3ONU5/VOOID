@@ -165,7 +165,7 @@
                     Administrationsservice
                 </h1>
                 <ul class="flex items-center justify-center gap-2">
-                    <li class="font-medium"><a href="../../index.html">Startseite</a></li>
+                    <li class="font-medium"><a href="../../index.html">Homepage</a></li>
                     <li class="font-medium">/ Administrationsservice</li>
                 </ul>
             </div>

@@ -48,11 +48,12 @@
                                 <a href="http://localhost/agency/homepage/#why_we" class="font-medium ease-in duration-300 hover:text-white">Why we</a>
                             </li>
                             <li>
-                                <a href="http://localhost/agency/homepage/#contact_us" class="font-medium ease-in duration-300 hover:text-white">Contact us</a>
-                            </li>
-                            <li>
                                 <a href="http://localhost/agency/reviews/" class="font-medium ease-in duration-300 hover:text-white">Reviews</a>
                             </li>
+                            <li>
+                                <a href="http://localhost/agency/evaluate_service/" class="font-medium ease-in duration-300 hover:text-white">Evaluate service</a>
+                            </li>
+
                         </ul>
                     </div>
                     <div>

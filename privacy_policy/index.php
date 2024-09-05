@@ -188,13 +188,13 @@
                         When you fill out any form on our website, we store the personal information you provide, including your name, phone number, e-mail address and company name. We will only use this information to process your request and communicate with you.
                     </p>
                     <h3 class="font-extrabold text-2xl text-white mb-6">
-                        2. storage of IP addresses
+                        2. Storage of IP addresses
                     </h3>
                     <p class="font-medium mb-6">
                         In addition to the above-mentioned data, we also store your IP address when you submit a form. The IP address is used to ensure the security of our website and to detect unauthorized access or to prevent misuse and spam.
                     </p>
                     <h3 class="font-extrabold text-2xl text-white mb-6">
-                        3. disclosure of data
+                        3. Disclosure of data
                     </h3>
                     <p class="font-medium mb-6">
                         We do not share your personal data with third parties unless it is necessary to fulfill the contract, requested by you, or required by law.

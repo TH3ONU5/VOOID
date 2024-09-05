@@ -1,4 +1,6 @@
 <?php
+session_start();
+session_regenerate_id(true);
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -12,93 +14,6 @@ function cleanInput($input)
     $input = stripslashes($input);
     $input = htmlspecialchars($input, ENT_QUOTES, 'UTF-8');
     return $input;
-}
-
-if (isset($_POST['feedback_form'])) {
-    $firstname = cleanInput($_POST['firstname']);
-    $lastname = cleanInput($_POST['lastname']);
-    $email = cleanInput($_POST['email']);
-    $titel = cleanInput($_POST['titel']);
-    $feedback = cleanInput($_POST['feedback']);
-    $rating = cleanInput($_POST['rating']);
-    $userIP = $_SERVER['REMOTE_ADDR'];
-
-    $error = '';
-
-    if (empty($firstname)) {
-        $error = "Please enter your first name.";
-    }
-
-    if (empty($lastname)) {
-        $error = "Please enter your last name.";
-    }
-
-    if (empty($terms)) {
-        $error = "Please accept the terms.";
-    }
-
-    if (empty($email)) {
-        $error = "Please enter your email.";
-    }
-
-    if (empty($titel)) {
-        $error = "Please enter a feedback titel.";
-    }
-
-    if (strlen($firstname) > 15) {
-        $error = "First name should not be more than 50 characters.";
-    }
-
-    if (strlen($lastname) > 15) {
-        $error = "Last name should not be more than 50 characters.";
-    }
-
-    if (strlen($email) > 50) {
-        $error = "Email name should not be more than 50 characters.";
-    }
-
-    if (strlen($titel) > 50) {
-        $error = "Feedback titel should not be more than 50 characters.";
-    }
-
-    if (strlen($feedback) > 2000) {
-        $error = "Feedback should not be more than 3000 characters.";
-    }
-
-    if ($rating == null) {
-        $error = "Select your rating stars.";
-    }
-
-    if (empty($error)) {
-
-        $stmt = $conn->prepare("SELECT ip FROM rating WHERE ip = ?");
-        $stmt->bind_param('s', $userIP);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        if ($result->num_rows > 0) {
-            echo "<div id='success'>You have already submitted an assessment.</div>";
-            echo "<script>setTimeout(() => {success.style.display='none';},3000);</script>";
-            $stmt->close();
-        } else {
-            $stmt->close();
-            $sql = "INSERT INTO rating (firstname, lastname, email, titel, feedback, rating, ip)
-            VALUES (?, ?, ?, ?, ?, ?, ?)";
-            $stmt = $conn->prepare($sql);
-            $stmt->bind_param("sssssis", $firstname, $lastname, $email, $titel, $feedback, $rating, $userIP);
-            if ($stmt->execute()) {
-                echo "<div id='success'>Feedback submitted successfully!</div>";
-                echo "<script>setTimeout(() => {success.style.display='none';},3000);</script>";
-            } else {
-                echo "<div id='success'>Something went wrong. Please try again!</div>";
-                echo "<script>setTimeout(() => {success.style.display='none';},3000);</script>";
-            }
-            $stmt->close();
-        }
-    } else {
-        echo "<div id='success'>" . $error . "</div>";
-        echo "<script>setTimeout(() => {success.style.display='none';},3000);</script>";
-    }
 }
 
 ?>
@@ -118,91 +33,6 @@ if (isset($_POST['feedback_form'])) {
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     </link>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-
-        .popup-wrapper {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            justify-content: center;
-            align-items: center;
-            z-index: 100000 !important;
-        }
-
-        .popup-box {
-            padding: 20px;
-            max-width: 500px;
-            width: 90%;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            position: relative;
-            background: #000000;
-            border: 2px solid #1C1C1C;
-            border-radius: 10px;
-        }
-
-        .close-popup-btn {
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            font-size: 24px;
-            cursor: pointer;
-        }
-
-        .form-layout {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .form-layout label {
-            margin-bottom: 5px;
-        }
-
-        .form-layout input,
-        .form-layout textarea {
-            margin-bottom: 10px;
-        }
-
-        .rating {
-            direction: rtl;
-            font-size: 2rem;
-            unicode-bidi: bidi-override;
-            display: inline-block;
-        }
-
-        .rating input {
-            display: none;
-        }
-
-        .rating label {
-            color: #ddd;
-            cursor: pointer;
-            display: inline-block;
-        }
-
-        .rating input:checked~label {
-            color: gold;
-        }
-
-        .rating label:hover,
-        .rating label:hover~label {
-            color: gold;
-        }
-
-        @media (max-width: 600px) {
-            .popup-box {
-                width: 95%;
-            }
-        }
-    </style>
 </head>
 
 <body x-data="{ page: 'ki-assistent', 'loaded': true, 'stickyMenu': false, 'navigationOpen': false, 'scrollTop': false }">
@@ -276,11 +106,11 @@ if (isset($_POST['feedback_form'])) {
             </div>
             <div class="text-center px-4">
                 <h1 class="font-extrabold text-heading-2 text-white mb-5.5">
-                    Reviews & Evaluate service
+                    Reviews
                 </h1>
                 <ul class="flex items-center justify-center gap-2">
                     <li class="font-medium"><a href="index.php">Homepage</a></li>
-                    <li class="font-medium">/ Reviews & Evaluate service</li>
+                    <li class="font-medium">/ Reviews</li>
                 </ul>
             </div>
         </section>
@@ -293,7 +123,7 @@ if (isset($_POST['feedback_form'])) {
                         <!-- HIER -->
                     </div>
                     <div class="wow fadeInLeft max-w-[570px] w-full mb-1em text-right-webkit">
-                        <button id="showPopupButton" class="button-border-gradient relative rounded-lg text-white text-sm flex items-center gap-1.5 py-2 px-4.5 shadow-button hover:button-gradient-hover hover:shadow-none">Evaluate service</button>
+                        <a href="../evaluate_service/" class="button-border-gradient w-fit-content relative rounded-lg text-white text-sm flex items-center gap-1.5 py-2 px-4.5 shadow-button hover:button-gradient-hover hover:shadow-none">Evaluate service</a>
                     </div>
                 </div>
             </div>
@@ -303,6 +133,11 @@ if (isset($_POST['feedback_form'])) {
             <div class="wow fadeInUp mx-auto w-full max-w-1150px text-center px-4 sm:px-8 lg:px-0" data-wow-delay="0.1s">
 
                 <?php
+                if (isset($_SESSION['msg'])) {
+                    $msg = $_SESSION['msg'];
+                    echo $msg;
+                    unset($_SESSION['msg']);
+                }
 
                 function generateStars($rating)
                 {
@@ -445,6 +280,7 @@ if (isset($_POST['feedback_form'])) {
                 } else {
                     echo 'No reviews have been provided at this time.';
                 }
+                $stmt->close();
                 $conn->close();
                 ?>
 
@@ -452,50 +288,6 @@ if (isset($_POST['feedback_form'])) {
         </section>
 
     </main>
-
-
-    <!-- popup -->
-    <div id="popupContainer" class="popup-wrapper">
-        <div class="popup-box">
-            <span id="hidePopupButton" class="close-popup-btn">&times;</span>
-            <p class="fs-2em text-white fw-bold mb-0.5em">Evaluation form</p>
-            <form id="feedbackForm" class="form-layout" action="" method="post">
-                <label for="inputName">Firstname:</label>
-                <input type="text" id="inputName" class="rounded-lg border border-white/[0.12] bg-white/[0.05] focus:border-purple w-full py-3 px-6 outline-none" maxlength="15" autocomplete="off" placeholder="firstname..." name="firstname" required>
-
-                <label for="inputName">Lastname:</label>
-                <input type="text" id="inputName" class="rounded-lg border border-white/[0.12] bg-white/[0.05] focus:border-purple w-full py-3 px-6 outline-none" maxlength="15" autocomplete="off" placeholder="lastname..." name="lastname" required>
-
-                <label for="inputEmail">E-Mail:</label>
-                <input type="email" id="inputEmail" class="rounded-lg border border-white/[0.12] bg-white/[0.05] focus:border-purple w-full py-3 px-6 outline-none" maxlength="50" autocomplete="off" placeholder="email..." name="email" required>
-
-                <label for="titel">Feedback titel:</label>
-                <input type="text" id="titel" class="rounded-lg border border-white/[0.12] bg-white/[0.05] focus:border-purple w-full py-3 px-6 outline-none" maxlength="50" autocomplete="off" placeholder="feedback titel..." name="titel" required>
-
-                <label for="inputFeedback">Feedback:</label>
-                <textarea id="inputFeedback" class="rounded-lg border border-white/[0.12] bg-white/[0.05] focus:border-purple w-full py-3 px-6 outline-none" autocomplete="off" name="feedback" rows="4" maxlength="2000" placeholder="feedback..." required></textarea>
-
-                <label class="mb-0" for="stars">Stars:</label>
-                <div class="rating text-end mb-15px" id="stars">
-                    <input type="radio" id="star5" name="rating" value="5"><label for="star5"><i class="bi bi-star-fill"></i></label>
-                    <input type="radio" id="star4" name="rating" value="4"><label for="star4"><i class="bi bi-star-fill"></i></label>
-                    <input type="radio" id="star3" name="rating" value="3"><label for="star3"><i class="bi bi-star-fill"></i></label>
-                    <input type="radio" id="star2" name="rating" value="2"><label for="star2"><i class="bi bi-star-fill"></i></label>
-                    <input type="radio" id="star1" name="rating" value="1"><label for="star1"><i class="bi bi-star-fill"></i></label>
-                </div>
-
-                <div class="mb-1em d-flex align-items-baseline gap-10px">
-                    <input type="checkbox" id="therms" class="fav-accent" name="terms" required>
-                    <label for="therms" class="text-white mb-2.5 block font-medium">
-                        I have read the <a href="../privacy_policy" target="_blank" class="underline-dashed fs-italic"> privacy policy </a> and agree with it.
-                    </label>
-                </div>
-
-                <button type="submit" class="hero-button-gradient text-center rounded-lg py-3 px-7 text-white font-medium ease-in duration-300 hover:opacity-80" name="feedback_form">Submit feedback</button>
-            </form>
-        </div>
-    </div>
-    <!-- popup -->
 
     <?php
     require_once('../footer.php');
