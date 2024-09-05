@@ -33,6 +33,10 @@ if (isset($_POST['feedback_form'])) {
         $error = "Please enter your last name.";
     }
 
+    if (empty($terms)) {
+        $error = "Please accept the terms.";
+    }
+
     if (empty($email)) {
         $error = "Please enter your email.";
     }
@@ -470,12 +474,20 @@ if (isset($_POST['feedback_form'])) {
                 <label for="inputFeedback">Feedback:</label>
                 <textarea id="inputFeedback" class="rounded-lg border border-white/[0.12] bg-white/[0.05] focus:border-purple w-full py-3 px-6 outline-none" autocomplete="off" name="feedback" rows="4" maxlength="2000" placeholder="feedback..." required></textarea>
 
-                <div class="rating text-center">
+                <label class="mb-0" for="stars">Stars:</label>
+                <div class="rating text-end mb-15px" id="stars">
                     <input type="radio" id="star5" name="rating" value="5"><label for="star5"><i class="bi bi-star-fill"></i></label>
                     <input type="radio" id="star4" name="rating" value="4"><label for="star4"><i class="bi bi-star-fill"></i></label>
                     <input type="radio" id="star3" name="rating" value="3"><label for="star3"><i class="bi bi-star-fill"></i></label>
                     <input type="radio" id="star2" name="rating" value="2"><label for="star2"><i class="bi bi-star-fill"></i></label>
                     <input type="radio" id="star1" name="rating" value="1"><label for="star1"><i class="bi bi-star-fill"></i></label>
+                </div>
+
+                <div class="mb-1em d-flex align-items-baseline gap-10px">
+                    <input type="checkbox" id="therms" class="fav-accent" name="terms" required>
+                    <label for="therms" class="text-white mb-2.5 block font-medium">
+                        I have read the <a href="../privacy_policy" target="_blank" class="underline-dashed fs-italic"> privacy policy </a> and agree with it.
+                    </label>
                 </div>
 
                 <button type="submit" class="hero-button-gradient text-center rounded-lg py-3 px-7 text-white font-medium ease-in duration-300 hover:opacity-80" name="feedback_form">Submit feedback</button>

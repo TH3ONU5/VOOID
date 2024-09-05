@@ -185,13 +185,13 @@
                         1. Collection and use of personal data
                     </h3>
                     <p class="font-medium mb-6">
-                        When you fill out our form, we store the personal information you provide, including your name, phone number, e-mail address and company name. We will only use this information to process your request and communicate with you.
+                        When you fill out any form on our website, we store the personal information you provide, including your name, phone number, e-mail address and company name. We will only use this information to process your request and communicate with you.
                     </p>
                     <h3 class="font-extrabold text-2xl text-white mb-6">
                         2. storage of IP addresses
                     </h3>
                     <p class="font-medium mb-6">
-                        In addition to the above-mentioned data, we also store your IP address when you submit the form. The IP address is used to ensure the security of our website and to detect unauthorized access or to prevent misuse and spam.
+                        In addition to the above-mentioned data, we also store your IP address when you submit a form. The IP address is used to ensure the security of our website and to detect unauthorized access or to prevent misuse and spam.
                     </p>
                     <h3 class="font-extrabold text-2xl text-white mb-6">
                         3. disclosure of data

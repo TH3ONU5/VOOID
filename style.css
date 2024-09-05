@@ -5693,6 +5693,14 @@ html {
   margin-right: 8px !important;
 }
 
+.mb-15px {
+  margin-bottom: 15px !important;
+}
+
+.mb-0 {
+  margin-bottom: 0 !important;
+}
+
 .mb-3em {
   margin-bottom: 3em !important;
 }
