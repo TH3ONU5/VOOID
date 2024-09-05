@@ -946,7 +946,7 @@
     </main>
 
     <?php
-    require_once('../footer.php');
+    require_once('footer.php');
     ?>
 
     <button class="hidden items-center justify-center w-10 h-10 rounded-[4px] shadow-solid-5 bg-purple hover:opacity-70 fixed bottom-8 right-8 z-999" @click="window.scrollTo({top: 0, behavior: 'smooth'})" @scroll.window="scrollTop = (window.pageYOffset &gt; 50) ? true : false" :class="{ '!flex' : scrollTop }">
@@ -970,13 +970,7 @@ $username = "root";
 $password = "";
 $dbname = "agencyDB";
 
-// Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
 
 function checkSubmissionLimit($conn, $ip)
 {
@@ -990,11 +984,11 @@ function checkSubmissionLimit($conn, $ip)
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
         if ($row["count"] >= 3) {
-            return false; // Sendelimit überschritten
+            return false; 
         }
     }
 
-    return true; // Sendelimit nicht überschritten oder IP-Adresse ist neu
+    return true;
 }
 
 function saveSubmissionCount($conn, $ip)
