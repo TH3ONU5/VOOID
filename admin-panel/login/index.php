@@ -47,13 +47,12 @@ function generateRandomString($length = 16)
 // --------
 
 if (isset($_POST["submit"])) {
-    $servername = "localhost";
+    $server = "localhost";
     $username = "root";
     $password = "";
-    $database = "agencyDB";
+    $dbname = "agencyDB";
 
-    $conn = new mysqli($servername, $username, $password, $database);
-
+    $conn = new mysqli($server, $username, $password, $dbname);
     $userIP = $_SERVER['REMOTE_ADDR'];
     $date = date("Y-m-d H:i:s");
 
