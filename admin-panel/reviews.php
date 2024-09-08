@@ -65,7 +65,6 @@ if (isset($_POST['delete'])) {
             font-family: Arial, sans-serif;
             background-color: #f9f9f9;
             margin: 0;
-            padding: 20px;
         }
 
         .review-card {
@@ -259,6 +258,7 @@ if (isset($_POST['delete'])) {
                             $firstname = cleanInput($row['firstname']);
                             $lastname = cleanInput($row['lastname']);
                             $titel = cleanInput(htmlspecialchars_decode($row['titel']));
+                            $email = cleanInput($row['email']);
                             $feedback = cleanInput(htmlspecialchars_decode($row['feedback']));
                             $rating = (int)cleanInput($row['rating']);
                             $date = cleanInput($row['date']);
@@ -339,6 +339,9 @@ if (isset($_POST['delete'])) {
      ' . $feedback . '
     </div>
    </div>
+   <p>
+   Email: ' . $email . '
+   </p>
    <div class="review-actions">  
     <form action="" method="post" class="flag">
      <button type="submit" name="delete" class="delete" value="' . $id . '">Delete</button>

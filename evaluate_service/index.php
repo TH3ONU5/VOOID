@@ -44,14 +44,14 @@ if (isset($_POST['feedback_form'])) {
         $errors[] = "Invalid last name format.";
     }
 
-    if (empty($terms)) {
-        $error = "Please accept the terms.";
-    }
-
     if (empty($email)) {
         $error = "Please enter your email.";
     } elseif (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
         $errors[] = "Invalid email address format.";
+    }
+
+    if (empty($terms)) {
+        $error = "Please accept the terms.";
     }
 
     if (empty($titel)) {

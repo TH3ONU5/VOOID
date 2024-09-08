@@ -100,7 +100,7 @@
                         We create your
                         dream website at an unbelievable price!
                     </p>
-                    <a href="../#prices" class="hero-button-gradient inline-flex rounded-lg py-3 px-7 text-white font-medium ease-in duration-300 hover:opacity-80">
+                    <a href="/#prices" class="hero-button-gradient inline-flex rounded-lg py-3 px-7 text-white font-medium ease-in duration-300 hover:opacity-80">
                         Get started now
                     </a>
                 </div>
@@ -259,7 +259,7 @@
                                             of what they want their website to look like, we create a completely
                                             unique design that matches their vision.
                                         </p>
-                                        <a href="../#support" class="features-button-gradient relative inline-flex items-center gap-1.5 rounded-full py-3 px-6 text-white text-sm ease-in duration-300 hover:shadow-button">
+                                        <a href="/#support" class="features-button-gradient relative inline-flex items-center gap-1.5 rounded-full py-3 px-6 text-white text-sm ease-in duration-300 hover:shadow-button">
                                             Contact us now
                                             <svg width="14" height="12" viewBox="0 0 14 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M13.3992 5.60002L8.22422 0.350024C7.99922 0.125024 7.64922 0.125024 7.42422 0.350024C7.19922 0.575024 7.19922 0.925025 7.42422 1.15002L11.6242 5.42503H0.999219C0.699219 5.42503 0.449219 5.67502 0.449219 5.97502C0.449219 6.27502 0.699219 6.55003 0.999219 6.55003H11.6742L7.42422 10.875C7.19922 11.1 7.19922 11.45 7.42422 11.675C7.52422 11.775 7.67422 11.825 7.82422 11.825C7.97422 11.825 8.12422 11.775 8.22422 11.65L13.3992 6.40002C13.6242 6.17502 13.6242 5.82502 13.3992 5.60002Z" fill="white"></path>
@@ -946,7 +946,7 @@
     </main>
 
     <?php
-    require_once('footer.php');
+    require_once('../footer.php');
     ?>
 
     <button class="hidden items-center justify-center w-10 h-10 rounded-[4px] shadow-solid-5 bg-purple hover:opacity-70 fixed bottom-8 right-8 z-999" @click="window.scrollTo({top: 0, behavior: 'smooth'})" @scroll.window="scrollTop = (window.pageYOffset &gt; 50) ? true : false" :class="{ '!flex' : scrollTop }">
@@ -984,7 +984,7 @@ function checkSubmissionLimit($conn, $ip)
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
         if ($row["count"] >= 3) {
-            return false; 
+            return false;
         }
     }
 
@@ -1010,25 +1010,34 @@ if (isset($_POST['submit'])) {
     $message = trim($_POST['message']);
     $terms = trim($_POST['terms']);
 
-
     $date = date("Y-m-d H:i:s");
 
     $errors = [];
+
+    if (empty($firstname)) {
+        $error = "Please enter your first name.";
+    } elseif (!preg_match('/^[a-zA-Z\s\'-]+$/', $_POST['firstname'])) {
+        $errors[] = "Invalid first name format.";
+    }
+
+    if (empty($lastname)) {
+        $error = "Please enter your last name.";
+    } elseif (!preg_match('/^[a-zA-Z\s\'-]+$/', $_POST['lastname'])) {
+        $errors[] = "Invalid last name format.";
+    }
+
+    if (empty($email)) {
+        $error = "Please enter your email.";
+    } elseif (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+        $errors[] = "Invalid email address format.";
+    }
 
     if (strlen($firstname) > 50) {
         $errors[] = "First name is too long. Max 50 characters.";
     }
 
-    if (empty($firstname)) {
-        $errors[] = "Enter your first name.";
-    }
-
     if (strlen($lastname) > 50) {
         $errors[] = "Last name is too long. Max 50 characters.";
-    }
-
-    if (empty($lastname)) {
-        $errors[] = "Enter your last name.";
     }
 
     if (strlen($phone) > 20 || strlen($phone) < 9 || !preg_match("/^\+?\d+$/", $phone)) {
@@ -1039,7 +1048,7 @@ if (isset($_POST['submit'])) {
         $errors[] = "Enter your phone number.";
     }
 
-    if (strlen($email) > 100 || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    if (strlen($email) > 100) {
         $errors[] = "Invalid email address.";
     }
 

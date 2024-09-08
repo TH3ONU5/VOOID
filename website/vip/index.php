@@ -652,20 +652,30 @@ if (isset($_POST['submit'])) {
 
     $errors = [];
 
+    if (empty($firstname)) {
+        $error = "Please enter your first name.";
+    } elseif (!preg_match('/^[a-zA-Z\s\'-]+$/', $_POST['firstname'])) {
+        $errors[] = "Invalid first name format.";
+    }
+
+    if (empty($lastname)) {
+        $error = "Please enter your last name.";
+    } elseif (!preg_match('/^[a-zA-Z\s\'-]+$/', $_POST['lastname'])) {
+        $errors[] = "Invalid last name format.";
+    }
+
+    if (empty($email)) {
+        $error = "Please enter your email.";
+    } elseif (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+        $errors[] = "Invalid email address format.";
+    }
+
     if (strlen($firstname) > 50) {
         $errors[] = "First name is too long. Max 50 characters.";
     }
 
-    if (empty($firstname)) {
-        $errors[] = "Enter your first name.";
-    }
-
     if (strlen($lastname) > 50) {
         $errors[] = "Last name is too long. Max 50 characters.";
-    }
-
-    if (empty($lastname)) {
-        $errors[] = "Enter your last name.";
     }
 
     if (strlen($phone) > 20 || strlen($phone) < 9 || !preg_match("/^\+?\d+$/", $phone)) {
@@ -676,7 +686,7 @@ if (isset($_POST['submit'])) {
         $errors[] = "Enter your phone number.";
     }
 
-    if (strlen($email) > 100 || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    if (strlen($email) > 100) {
         $errors[] = "Invalid email address.";
     }
 

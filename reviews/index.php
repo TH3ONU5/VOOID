@@ -246,7 +246,7 @@ function cleanInput($input)
                         $stars = generateStars($rating);
 
                         echo '
-        <div class="relative rounded-3xl features-box-border p-6 rounded-lg shadow-md w-full mb-1em">
+        <div id="' . $id . '" class="relative rounded-3xl features-box-border p-6 rounded-lg shadow-md w-full mb-1em">
             <div class="flex items-center mb-4">
                 <div class="bg-purpil text-white rounded-full w-12 h-12 flex items-center justify-center text-xl font-bold">' . $namef . $namel . '</div>
                 <div class="ml-4">
