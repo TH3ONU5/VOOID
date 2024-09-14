@@ -2,6 +2,10 @@
 session_start();
 session_regenerate_id(true);
 
+ini_set('display_errors', '1');
+ini_set('display_startup_errors', '1');
+error_reporting(E_ALL);
+
 // --------
 function checkSubmissionLimit($conn, $ip)
 {
@@ -47,12 +51,6 @@ function generateRandomString($length = 16)
 // --------
 
 if (isset($_POST["submit"])) {
-    $server = "localhost";
-    $username = "root";
-    $password = "";
-    $dbname = "agencyDB";
-
-    $conn = new mysqli($server, $username, $password, $dbname);
     $userIP = $_SERVER['REMOTE_ADDR'];
     $date = date("Y-m-d H:i:s");
 
@@ -98,8 +96,8 @@ if (isset($_POST["submit"])) {
     }
 
     $stmt->close();
-    $conn->close();
 }
+$conn->close();
 ?>
 
 

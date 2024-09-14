@@ -16,10 +16,6 @@ function cleanInput($input)
     return $input;
 }
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 if (isset($_POST['feedback_form'])) {
     $firstname = cleanInput($_POST['firstname']);
     $lastname = cleanInput($_POST['lastname']);

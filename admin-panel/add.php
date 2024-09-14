@@ -2,12 +2,7 @@
 session_start();
 session_regenerate_id(true);
 
-$server = "localhost";
-$username = "root";
-$password = "";
-$dbname = "agencyDB";
-
-$conn = new mysqli($server, $username, $password, $dbname);
+include_once('../db.php');
 
 function cleanInput($input)
 {
@@ -32,16 +27,6 @@ if (isset($_POST["logout"])) {
 }
 
 if (isset($_POST["submit"])) {
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $dbname = "agencyDB";
-
-    $conn = new mysqli($servername, $username, $password, $dbname);
-
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
 
     $userIP = $_SERVER['REMOTE_ADDR'];
     $firstname = cleanInput($_POST['firstname']);
@@ -114,8 +99,8 @@ if (isset($_POST["submit"])) {
         echo "</div>";
         echo "<script>setTimeout(() => {document.getElementById('success').style.display='none';},3500);</script>";
     }
-    $conn->close();
 }
+$conn->close();
 ?>
 
 <!DOCTYPE html>
