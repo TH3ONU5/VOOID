@@ -2,6 +2,8 @@
 session_start();
 session_regenerate_id(true);
 
+require_once('../../db.php');
+
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
@@ -96,8 +98,8 @@ if (isset($_POST["submit"])) {
     }
 
     $stmt->close();
+    $conn->close();
 }
-$conn->close();
 ?>
 
 
@@ -216,9 +218,9 @@ $conn->close();
                                     <h2 class="flex items-center justify-center text-heading-2">Administrator</h2>
                                     <span class="relative block font-medium text-sm text-center my-7.5">
                                         <span
-                                            class="block absolute left-0 top-1/2 h-[1px] w-22.5 bg-white/[0.12]"></span>
+                                            class="block absolute left-0 top-1/2 h-[1px] w-27 bg-white/[0.12]"></span>
                                         <span
-                                            class="block absolute right-0 top-1/2 h-[1px] w-22.5 bg-white/[0.12]"></span>
+                                            class="block absolute right-0 top-1/2 h-[1px] w-27 bg-white/[0.12]"></span>
                                         Admin
                                     </span>
                                     <div class="mb-4 relative">

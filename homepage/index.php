@@ -965,12 +965,7 @@
 
 <?php
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "agencyDB";
-
-$conn = new mysqli($servername, $username, $password, $dbname);
+require_once('../db.php');
 
 function checkSubmissionLimit($conn, $ip)
 {

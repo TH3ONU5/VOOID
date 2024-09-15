@@ -532,7 +532,6 @@
     </script>
 
     <script>
-        // slide show 1
         var slideIndex = 1;
         showDivs(slideIndex);
 
@@ -557,7 +556,6 @@
     </script>
 
     <script>
-        // Imgae big
 
         const modal = document.getElementById("modal");
         const modalImg = document.getElementById("modal-img");
@@ -587,14 +585,7 @@
 </html>
 
 <?php
-
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "agencyDB";
-
-$conn = new mysqli($servername, $username, $password, $dbname);
-
+require_once('../../db.php');
 
 function checkSubmissionLimit($conn, $ip)
 {

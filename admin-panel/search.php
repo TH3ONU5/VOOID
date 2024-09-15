@@ -2,19 +2,14 @@
 session_start();
 session_regenerate_id(true);
 
+require_once('../db.php');
+
 if (!isset($_SESSION['admin'])) {
     session_destroy();
     session_unset();
     header("Location: ./login/");
     exit;
 }
-
-$server = "localhost";
-$username = "root";
-$password = "";
-$dbname = "agencyDB";
-
-$conn = new mysqli($server, $username, $password, $dbname);
 
 if (isset($_POST["logout"])) {
     session_destroy();
@@ -25,12 +20,6 @@ if (isset($_POST["logout"])) {
 
 if (isset($_POST['delete'])) {
     $user_id = intval($_POST['user_id']);
-
-    $conn = new mysqli($server, $username, $password, $dbname);
-
-    if ($conn->connect_error) {
-        die("Verbindung fehlgeschlagen: " . $conn->connect_error);
-    }
 
     $displayn = "Dont display";
 
@@ -56,7 +45,6 @@ if (isset($_POST['delete'])) {
     }
 
     $stmt->close();
-    $conn->close();
 }
 ?>
 
@@ -140,12 +128,6 @@ if (isset($_POST['delete'])) {
 
                                     <?php
                                     if (isset($_POST['search'])) {
-                                        $server = "localhost";
-                                        $servername = "root";
-                                        $serverpassword = "";
-                                        $dbname = "agencyDB";
-
-                                        $conn = new mysqli($server, $servername, $serverpassword, $dbname);
 
                                         if ($conn->connect_errno) {
                                             die("Something went wrong!");
@@ -213,9 +195,12 @@ if (isset($_POST['delete'])) {
                                     </tr>
                                             ';
                                             }
+                                            $stmt->close();
                                         } else {
                                             echo '<tr><td colspan="6" class="text-center">No records found</td>';
                                         }
+                                    } else {
+                                        echo '<tr><td colspan="6" class="text-center">No records found</td>';
                                     }
                                     ?>
                                 </tbody>
@@ -230,6 +215,10 @@ if (isset($_POST['delete'])) {
             </main>
         </div>
     </div>
+
+    <?php
+    $conn->close();
+    ?>
 
     <script src="main.js"></script>
 </body>

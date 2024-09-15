@@ -2,25 +2,14 @@
 session_start();
 session_regenerate_id(true);
 
-$server = "localhost";
-$username = "root";
-$password = "";
-$dbname = "agencyDB";
+require_once('../db.php');
 
-$conn = new mysqli($server, $username, $password, $dbname);
 if (!isset($_SESSION['admin'])) {
     session_destroy();
     session_unset();
     header("Location: ./login/");
     exit;
 }
-
-$server = "localhost";
-$username = "root";
-$password = "";
-$dbname = "agencyDB";
-
-$conn = new mysqli($server, $username, $password, $dbname);
 
 if (isset($_POST["logout"])) {
     session_destroy();
@@ -31,13 +20,6 @@ if (isset($_POST["logout"])) {
 
 if (isset($_POST['delete'])) {
     $user_id = htmlspecialchars(trim($_POST['user_id']));
-
-    $server = "localhost";
-    $servername = "root";
-    $serverpassword = "";
-    $dbname = "agencyDB";
-
-    $conn = new mysqli($server, $servername, $serverpassword, $dbname);
 
     $displayn = "Dont display";
 
@@ -59,18 +41,10 @@ if (isset($_POST['delete'])) {
     }
 
     $stmt->close();
-    $conn->close();
 }
 
 if (isset($_POST['set_done'])) {
     $user_id = htmlspecialchars(trim($_POST['user_id']));
-
-    $server = "localhost";
-    $servername = "root";
-    $serverpassword = "";
-    $dbname = "agencyDB";
-
-    $conn = new mysqli($server, $servername, $serverpassword, $dbname);
 
     $done = "Done";
 
@@ -92,18 +66,10 @@ if (isset($_POST['set_done'])) {
     }
 
     $stmt->close();
-    $conn->close();
 }
 
 if (isset($_POST['set_inProgress'])) {
     $user_id = htmlspecialchars(trim($_POST['user_id']));
-
-    $server = "localhost";
-    $servername = "root";
-    $serverpassword = "";
-    $dbname = "agencyDB";
-
-    $conn = new mysqli($server, $servername, $serverpassword, $dbname);
 
     $progress = "In progress";
 
@@ -125,18 +91,10 @@ if (isset($_POST['set_inProgress'])) {
     }
 
     $stmt->close();
-    $conn->close();
 }
 
 if (isset($_POST['payed'])) {
     $user_id = htmlspecialchars(trim($_POST['user_id']));
-
-    $server = "localhost";
-    $servername = "root";
-    $serverpassword = "";
-    $dbname = "agencyDB";
-
-    $conn = new mysqli($server, $servername, $serverpassword, $dbname);
 
     $sql_select = "SELECT paid FROM contact WHERE id =?";
     $stmt_select = $conn->prepare($sql_select);
@@ -166,7 +124,6 @@ if (isset($_POST['payed'])) {
     }
 
     $stmt->close();
-    $conn->close();
 }
 ?>
 
@@ -232,18 +189,8 @@ if (isset($_POST['payed'])) {
 
                                     <?php
                                     if (isset($_GET['user_id'])) {
-                                        $server = "localhost";
-                                        $servername = "root";
-                                        $serverpassword = "";
-                                        $dbname = "agencyDB";
 
-                                        $user_id = $_GET['user_id'];
-
-                                        $conn = new mysqli($server, $servername, $serverpassword, $dbname);
-
-                                        if ($conn->connect_errno) {
-                                            die("Something went wrong!");
-                                        }
+                                        $user_id = stripslashes(trim(htmlspecialchars($_GET['user_id'])));
 
                                         $stmt = $conn->prepare("SELECT id, lastname, firstname, send, company, phone, email, message, status, paid FROM contact WHERE id = ? AND display = 'show'");
                                         $stmt->bind_param("i", $user_id);
@@ -274,7 +221,7 @@ if (isset($_POST['payed'])) {
                 <span class="text-heading font-semibold">' . stripslashes(trim(htmlspecialchars($row['email']))) . '</span>
             </td>
             <td>
-                <span class="badge badge-lg badge-dot"><i class="' . $status_color . '"></i>' . stripslashes(trim(htmlspecialchars($row['status']))) . '</span>
+                <span class="badge badge-lg badge-dot">' . stripslashes(trim(htmlspecialchars($row['status']))) . '</span>
             </td>
             <td class="text-end float-end d-flex gap-8px">
                 <form action="" method="post" class="w-fit-content">
@@ -297,7 +244,7 @@ if (isset($_POST['payed'])) {
             </td>
         </tr>';
                                         }
-                                        $conn->close();
+
                                         $stmt->close();
                                     }
                                     ?>
@@ -313,13 +260,7 @@ if (isset($_POST['payed'])) {
                                 $serverpassword = "";
                                 $dbname = "agencyDB";
 
-                                $user_id = $_GET['user_id'];
-
-                                $conn = new mysqli($server, $servername, $serverpassword, $dbname);
-
-                                if ($conn->connect_errno) {
-                                    die("Something went wrong!");
-                                }
+                                $user_id = stripcslashes(trim(htmlspecialchars($_GET['user_id'])));
 
                                 $stmt = $conn->prepare("SELECT id, lastname, firstname, send, company, phone, email, message, status, paid FROM contact WHERE id = '$user_id' AND display = 'show'");
                                 $stmt->execute();
@@ -328,8 +269,8 @@ if (isset($_POST['payed'])) {
                                 if ($result->num_rows > 0) {
                                     echo ($row['message']);
                                 }
+                                $stmt->close();
                             }
-
                             ?>
                         </div>
                     </div>
@@ -337,6 +278,10 @@ if (isset($_POST['payed'])) {
             </main>
         </div>
     </div>
+
+    <?php
+    $conn->close();
+    ?>
 
     <script src="main.js"></script>
 </body>

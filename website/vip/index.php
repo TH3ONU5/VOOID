@@ -507,7 +507,6 @@
     </script>
 
     <script>
-        // slide show 1
         var slideIndex = 1;
         showDivs(slideIndex);
 
@@ -532,7 +531,6 @@
     </script>
 
     <script>
-        // slide show 1
         var slideIndex = 1;
         showDivs(slideIndex);
 
@@ -557,8 +555,6 @@
     </script>
 
     <script>
-        // Imgae big
-
         const modal = document.getElementById("modal");
         const modalImg = document.getElementById("modal-img");
         const images = document.querySelectorAll(".gallery-image");
@@ -587,19 +583,7 @@
 </html>
 
 <?php
-
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "agencyDB";
-
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+require_once('../../db.php');
 
 function checkSubmissionLimit($conn, $ip)
 {

@@ -2,19 +2,14 @@
 session_start();
 session_regenerate_id(true);
 
+require_once('../db.php');
+
 if (!isset($_SESSION['admin'])) {
     session_destroy();
     session_unset();
     header("Location: ./login/");
     exit;
 }
-
-$server = "localhost";
-$username = "root";
-$password = "";
-$dbname = "agencyDB";
-
-$conn = new mysqli($server, $username, $password, $dbname);
 
 if (isset($_POST["logout"])) {
     session_destroy();
@@ -25,12 +20,6 @@ if (isset($_POST["logout"])) {
 
 if (isset($_POST['delete'])) {
     $user_id = intval($_POST['user_id']);
-
-    $conn = new mysqli($server, $username, $password, $dbname);
-
-    if ($conn->connect_error) {
-        die("Verbindung fehlgeschlagen: " . $conn->connect_error);
-    }
 
     $displayn = "Dont display";
 
@@ -56,7 +45,6 @@ if (isset($_POST['delete'])) {
     }
 
     $stmt->close();
-    $conn->close();
 }
 ?>
 
@@ -102,7 +90,7 @@ if (isset($_POST['delete'])) {
                     ?>
                     <div class="card shadow border-0 mb-7">
                         <div class="card-header">
-                            <h5 class="mb-0">Website VIP</h5>
+                            <h5 class="mb-0">Website VIP-Package</h5>
                         </div>
                         <div class="table-responsive">
                             <table class="table table-hover table-nowrap">
@@ -118,12 +106,6 @@ if (isset($_POST['delete'])) {
                                 <tbody>
 
                                     <?php
-                                    $server = "localhost";
-                                    $servername = "root";
-                                    $serverpassword = "";
-                                    $dbname = "agencyDB";
-
-                                    $conn = new mysqli($server, $servername, $serverpassword, $dbname);
 
                                     if ($conn->connect_errno) {
                                         die("Something went wrong!");
@@ -195,14 +177,13 @@ if (isset($_POST['delete'])) {
                                 $num_customers = $result->num_rows;
                                 echo "Showing " . $num_customers . " of " . $num_customers . " customers";
                                 $stmt->close();
-                                $conn->close();
                                 ?>
                             </span>
                         </div>
                     </div>
                     <div class="card shadow border-0 mb-7">
                         <div class="card-header">
-                            <h5 class="mb-0">Website Premium</h5>
+                            <h5 class="mb-0">Website Premium-Package</h5>
                         </div>
                         <div class="table-responsive">
                             <table class="table table-hover table-nowrap">
@@ -218,13 +199,6 @@ if (isset($_POST['delete'])) {
                                 <tbody>
 
                                     <?php
-                                    $server = "localhost";
-                                    $servername = "root";
-                                    $serverpassword = "";
-                                    $dbname = "agencyDB";
-
-                                    $conn = new mysqli($server, $servername, $serverpassword, $dbname);
-
                                     if ($conn->connect_errno) {
                                         die("Something went wrong!");
                                     }
@@ -295,14 +269,14 @@ if (isset($_POST['delete'])) {
                                 $num_customers = $result->num_rows;
                                 echo "Showing " . $num_customers . " of " . $num_customers . " customers";
                                 $stmt->close();
-                                $conn->close();
+
                                 ?>
                             </span>
                         </div>
                     </div>
                     <div class="card shadow border-0 mb-7">
                         <div class="card-header">
-                            <h5 class="mb-0">Website Starter</h5>
+                            <h5 class="mb-0">Website Starter-Package</h5>
                         </div>
                         <div class="table-responsive">
                             <table class="table table-hover table-nowrap">
@@ -318,13 +292,6 @@ if (isset($_POST['delete'])) {
                                 <tbody>
 
                                     <?php
-                                    $server = "localhost";
-                                    $servername = "root";
-                                    $serverpassword = "";
-                                    $dbname = "agencyDB";
-
-                                    $conn = new mysqli($server, $servername, $serverpassword, $dbname);
-
                                     if ($conn->connect_errno) {
                                         die("Something went wrong!");
                                     }
@@ -395,7 +362,6 @@ if (isset($_POST['delete'])) {
                                 $num_customers = $result->num_rows;
                                 echo "Showing " . $num_customers . " of " . $num_customers . " customers";
                                 $stmt->close();
-                                $conn->close();
                                 ?>
                             </span>
                         </div>
@@ -418,13 +384,6 @@ if (isset($_POST['delete'])) {
                                 <tbody>
 
                                     <?php
-                                    $server = "localhost";
-                                    $servername = "root";
-                                    $serverpassword = "";
-                                    $dbname = "agencyDB";
-
-                                    $conn = new mysqli($server, $servername, $serverpassword, $dbname);
-
                                     if ($conn->connect_errno) {
                                         die("Something went wrong!");
                                     }
@@ -495,14 +454,13 @@ if (isset($_POST['delete'])) {
                                 $num_customers = $result->num_rows;
                                 echo "Showing " . $num_customers . " of " . $num_customers . " customers";
                                 $stmt->close();
-                                $conn->close();
                                 ?>
                             </span>
                         </div>
                     </div>
                     <div class="card shadow border-0 mb-7">
                         <div class="card-header">
-                            <h5 class="mb-0">Kontaktiert</h5>
+                            <h5 class="mb-0">Contact</h5>
                         </div>
                         <div class="table-responsive">
                             <table class="table table-hover table-nowrap">
@@ -518,13 +476,6 @@ if (isset($_POST['delete'])) {
                                 <tbody>
 
                                     <?php
-                                    $server = "localhost";
-                                    $servername = "root";
-                                    $serverpassword = "";
-                                    $dbname = "agencyDB";
-
-                                    $conn = new mysqli($server, $servername, $serverpassword, $dbname);
-
                                     if ($conn->connect_errno) {
                                         die("Something went wrong!");
                                     }
@@ -595,7 +546,6 @@ if (isset($_POST['delete'])) {
                                 $num_customers = $result->num_rows;
                                 echo "Showing " . $num_customers . " of " . $num_customers . " customers";
                                 $stmt->close();
-                                $conn->close();
                                 ?>
                             </span>
                         </div>
@@ -604,7 +554,9 @@ if (isset($_POST['delete'])) {
             </main>
         </div>
     </div>
-
+    <?php
+    $conn->close();
+    ?>
     <script src="main.js"></script>
 </body>
 

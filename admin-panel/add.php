@@ -2,7 +2,7 @@
 session_start();
 session_regenerate_id(true);
 
-include_once('../db.php');
+require_once('../db.php');
 
 function cleanInput($input)
 {
@@ -100,7 +100,6 @@ if (isset($_POST["submit"])) {
         echo "<script>setTimeout(() => {document.getElementById('success').style.display='none';},3500);</script>";
     }
 }
-$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -222,6 +221,10 @@ $conn->close();
             </main>
         </div>
     </div>
+
+    <?php
+    $conn->close();
+    ?>
 
     <script src="main.js"></script>
 </body>

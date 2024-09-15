@@ -22,13 +22,6 @@
                         <i class="bi bi-chat"></i> New orders
                         <span class="badge bg-soft-primary text-primary rounded-pill d-inline-flex align-items-center ms-auto">
                             <?php
-                            $server = "localhost";
-                            $servername = "root";
-                            $serverpassword = "";
-                            $dbname = "agencyDB";
-
-                            $conn = new mysqli($server, $servername, $serverpassword, $dbname);
-
                             $sql = "SELECT COUNT(*) AS num_rows FROM contact WHERE status IN ('New') AND display = 'show'";
                             $stmt = $conn->prepare($sql);
 
@@ -41,7 +34,6 @@
                             echo ($num_rows);
 
                             $stmt->close();
-                            $conn->close();
                             ?>
                         </span>
                     </a>
@@ -69,13 +61,6 @@
                         New orders
                         <span class="badge bg-soft-primary text-primary rounded-pill d-inline-flex align-items-center ms-4">
                             <?php
-                            $server = "localhost";
-                            $servername = "root";
-                            $serverpassword = "";
-                            $dbname = "agencyDB";
-
-                            $conn = new mysqli($server, $servername, $serverpassword, $dbname);
-
                             $sql = "SELECT COUNT(*) AS num_rows FROM contact WHERE status IN ('New') AND display = 'show'";
                             $stmt = $conn->prepare($sql);
 
@@ -88,19 +73,12 @@
                             echo ($num_rows);
 
                             $stmt->close();
-                            $conn->close();
                             ?>
                         </span>
                     </div>
                 </li>
 
                 <?php
-                $server = "localhost";
-                $servername = "root";
-                $serverpassword = "";
-                $dbname = "agencyDB";
-
-                $conn = new mysqli($server, $servername, $serverpassword, $dbname);
 
                 $sql = "SELECT * FROM contact WHERE status IN ('New') AND display = 'show' ORDER BY send DESC LIMIT 5";
 
@@ -137,7 +115,6 @@
                             ';
                 }
                 $stmt->close();
-                $conn->close();
                 ?>
             </ul>
             <div class="mt-auto"></div>

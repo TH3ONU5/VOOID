@@ -2,6 +2,8 @@
 session_start();
 session_regenerate_id(true);
 
+require_once('../db.php');
+
 if (!isset($_SESSION['admin'])) {
     session_destroy();
     session_unset();
@@ -25,12 +27,6 @@ function cleanInput($input)
 }
 
 if (isset($_POST['delete'])) {
-    $server = "localhost";
-    $username = "root";
-    $password = "";
-    $dbname = "agencyDB";
-    $conn = new mysqli($server, $username, $password, $dbname);
-
     $delete = cleanInput($_POST['delete']);
 
     $stmt = $conn->prepare("DELETE FROM rating WHERE id = ?");
@@ -206,12 +202,6 @@ if (isset($_POST['delete'])) {
                     require_once('top.php');
                     ?>
                     <?php
-                    $server = "localhost";
-                    $username = "root";
-                    $password = "";
-                    $dbname = "agencyDB";
-
-                    $conn = new mysqli($server, $username, $password, $dbname);
 
                     function generateStars($rating)
                     {

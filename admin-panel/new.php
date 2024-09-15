@@ -2,25 +2,18 @@
 session_start();
 session_regenerate_id(true);
 
-$server = "localhost";
-$username = "root";
-$password = "";
-$dbname = "agencyDB";
+require_once('../db.php');
 
-$conn = new mysqli($server, $username, $password, $dbname);
+ini_set('display_errors', '1');
+ini_set('display_startup_errors', '1');
+error_reporting(E_ALL);
+
 if (!isset($_SESSION['admin'])) {
     session_destroy();
     session_unset();
     header("Location: ./login/");
     exit;
 }
-
-$server = "localhost";
-$username = "root";
-$password = "";
-$dbname = "agencyDB";
-
-$conn = new mysqli($server, $username, $password, $dbname);
 
 if (isset($_POST["logout"])) {
     session_destroy();
@@ -31,13 +24,6 @@ if (isset($_POST["logout"])) {
 
 if (isset($_POST['delete'])) {
     $user_id = htmlspecialchars(trim($_POST['user_id']));
-
-    $server = "localhost";
-    $servername = "root";
-    $serverpassword = "";
-    $dbname = "agencyDB";
-
-    $conn = new mysqli($server, $servername, $serverpassword, $dbname);
 
     $displayn = "Dont display";
 
@@ -59,7 +45,6 @@ if (isset($_POST['delete'])) {
     }
 
     $stmt->close();
-    $conn->close();
 }
 ?>
 
@@ -120,16 +105,6 @@ if (isset($_POST['delete'])) {
                                 <tbody>
 
                                     <?php
-                                    $server = "localhost";
-                                    $servername = "root";
-                                    $serverpassword = "";
-                                    $dbname = "agencyDB";
-
-                                    $conn = new mysqli($server, $servername, $serverpassword, $dbname);
-
-                                    if ($conn->connect_errno) {
-                                        die("Something went wrong!");
-                                    }
 
                                     $stmt = $conn->prepare("SELECT id, lastname, firstname, send, company, status, paid, message FROM contact WHERE status IN ('New') AND display = 'show'");
                                     $stmt->execute();
@@ -141,7 +116,7 @@ if (isset($_POST['delete'])) {
                                             $lastname_letter = substr($row["lastname"], 0, 1);
                                             $company_letter = substr($row["company"], 0, 1);
                                             echo '
-                                            <tr id"' . stripslashes(trim(htmlspecialchars($row['id']))) . '">
+                                            <tr id="' . stripslashes(trim(htmlspecialchars($row['id']))) . '">
                                         <td>
                                             <div class="avatar avatar-sm rounded-circle me-2 bg-soft-warning text-fav">'
                                                 . stripslashes(trim(htmlspecialchars($firstname_letter))) . stripslashes(trim(htmlspecialchars($lastname_letter))) .
@@ -162,8 +137,7 @@ if (isset($_POST['delete'])) {
                                                 '</a>
                                         </td>
                                         <td>
-                                            <span class="badge badge-lg badge-dot">
-                                                <i class="' . $status_color . '"></i>'
+                                            <span class="badge badge-lg badge-dot">'
                                                 . stripslashes(trim(htmlspecialchars($row['status']))) .
                                                 '</span>
                                         </td>
@@ -182,6 +156,9 @@ if (isset($_POST['delete'])) {
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                             </form>
+                                             <span class="badge badge-lg badge-dot ms-10px">
+                                            <i style="background:' . stripslashes(trim(htmlspecialchars($row['paid']))) . ';"></i>
+                                            </span>
                                         </td>
                                     </tr>
                                             ';
@@ -200,7 +177,6 @@ if (isset($_POST['delete'])) {
                                 $num_customers = $result->num_rows;
                                 echo "Showing " . $num_customers . " of " . $num_customers . " customers";
                                 $stmt->close();
-                                $conn->close();
                                 ?>
                             </span>
                         </div>
@@ -209,6 +185,10 @@ if (isset($_POST['delete'])) {
             </main>
         </div>
     </div>
+
+    <?php
+    $conn->close();
+    ?>
 
     <script src="main.js"></script>
 </body>
