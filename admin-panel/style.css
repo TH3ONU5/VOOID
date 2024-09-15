@@ -15,6 +15,10 @@ html {
   color: #5c60f5 !important;
 }
 
+.white-space-pre-line {
+  white-space: pre-line !important;
+}
+
 .bg-soft-warning {
   background-color: #ccd0ff !important;
 }

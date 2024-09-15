@@ -252,7 +252,7 @@ if (isset($_POST['payed'])) {
                                 </tbody>
                             </table>
                         </div>
-                        <div class="card-footer border-0 py-5">
+                        <div class="card-footer border-0 py-5 white-space-pre-line">
                             <?php
                             if (isset($_GET['user_id'])) {
                                 $server = "localhost";
